@@ -62,8 +62,10 @@
 
         /* ── HEADER ── */
         .header {
-            border-bottom: 1px solid var(--line);
-            background: var(--w);
+            border-bottom: 1px solid var(--line2);
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -96,7 +98,7 @@
 
         .header-nav a {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
             color: var(--dark);
             text-decoration: none;
@@ -170,13 +172,19 @@
         /* ── HERO ── */
         .hero {
             padding: 5rem 0;
-            border-bottom: 1px solid var(--line2);
+            border-top: 1px solid var(--line2);
+            box-shadow: var(--shadow-section);
+        }
+
+        .hero .grid-section {
+            padding: 1.5rem;
         }
 
         .hero .col-main {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            padding: 1.5rem;
         }
 
         .hero h1 {
@@ -341,7 +349,9 @@
         /* ── EVENTS ── */
         .events-section {
             padding: 5rem 0;
-            border-bottom: 1px solid var(--line2);
+            margin-top: 2rem;
+            border-top: 1px solid var(--line2);
+            box-shadow: var(--shadow-section);
         }
 
         .events-header {
@@ -483,7 +493,9 @@
         /* ── PRICING + HOW ── */
         .pricing-section {
             padding: 5rem 0;
-            border-bottom: 1px solid var(--line2);
+            margin-top: 2rem;
+            border-top: 1px solid var(--line2);
+            box-shadow: var(--shadow-section);
         }
 
         .pricing-section .col-main {
@@ -659,7 +671,9 @@
         /* ── FORM ── */
         .form-section {
             padding: 5rem 0;
-            border-bottom: 1px solid var(--line2);
+            margin-top: 2rem;
+            border-top: 1px solid var(--line2);
+            box-shadow: var(--shadow-section);
             background: var(--bg2);
         }
 
@@ -800,17 +814,57 @@
         /* ── FOOTER ── */
         .footer {
             background: var(--dark);
-            padding: 2.5rem 0;
-            border-top: 1px solid #3e3063;
+            padding: 3rem 0;
+            margin-top: 2rem;
+            border-top-left-radius: 45px;
+            border-top-right-radius: 45px;
         }
 
-        .footer-inner {
+        .footer-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .footer .logo img { height: 50px; }
+
+        .footer-cats {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .footer-cat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: opacity 0.15s;
+        }
+
+        .footer-cat:hover { opacity: 0.8; }
+
+        .footer-cat img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+        }
+
+        .footer-cat-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .footer-bottom {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-
-        .footer .logo img { height: 45px; filter: brightness(0) invert(1); }
 
         .footer-links {
             display: flex;
@@ -819,9 +873,9 @@
         }
 
         .footer-links a {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 400;
             color: rgba(255,255,255,0.35);
             text-decoration: none;
             transition: color 0.12s;
@@ -990,7 +1044,9 @@
             .modal-btns { flex-direction: column; }
             .modal-body { padding: 1.5rem; }
 
-            .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
+            .footer-top { flex-direction: column; gap: 1.5rem; text-align: center; }
+            .footer-cats { flex-wrap: wrap; justify-content: center; }
+            .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
             .footer-links { flex-wrap: wrap; justify-content: center; gap: 1em; }
 
             .filters { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
@@ -1274,15 +1330,30 @@
 <!-- FOOTER -->
 <footer class="footer">
     <div class="container">
-        <div class="footer-inner">
-            <a href="https://www.bitemarks.cz" class="logo"><img src="https://bitemarksmedia.com/wp-content/uploads/2024/10/Bite-Marks-Media_Logo.webp" alt="Bite Marks"></a>
+        <div class="footer-top">
+            <a href="https://www.bitemarks.cz" class="logo"><img src="https://www.bitemarks.cz/wp-content/uploads/2025/11/logo-bile-kopie.png" alt="Bite Marks"></a>
+            <div class="footer-cats">
+                <a href="https://www.bitemarks.cz/rubriky/kariera/" class="footer-cat">
+                    <img src="https://www.bitemarks.cz/wp-content/uploads/2025/12/Kariera-icona.webp" alt="Kariéra">
+                    <span class="footer-cat-name">Kariéra</span>
+                </a>
+                <a href="https://www.bitemarks.cz/rubriky/business/" class="footer-cat">
+                    <img src="https://www.bitemarks.cz/wp-content/uploads/2025/12/Business_icon.webp" alt="Business">
+                    <span class="footer-cat-name">Business</span>
+                </a>
+                <a href="https://www.bitemarks.cz/rubriky/zdravi/" class="footer-cat">
+                    <img src="https://www.bitemarks.cz/wp-content/uploads/2025/12/Zdravi-icona.webp" alt="Zdraví">
+                    <span class="footer-cat-name">Zdraví</span>
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <ul class="footer-links">
-                <li><a href="https://www.bitemarks.cz/rubriky/kariera/">Kariéra</a></li>
-                <li><a href="https://www.bitemarks.cz/rubriky/business/">Business</a></li>
-                <li><a href="https://www.bitemarks.cz/rubriky/zdravi/">Zdraví</a></li>
-                <li><a href="mailto:valerie.cizkova@bitemarks.cz">Kontakt</a></li>
+                <li><a href="mailto:valerie.cizkova@bitemarks.cz">valerie.cizkova@bitemarks.cz</a></li>
+                <li><a href="tel:+420773515703">+420 773 515 703</a></li>
+                <li><a href="#">Podmínky</a></li>
             </ul>
-            <div class="footer-copy">2026 Bite Marks s.r.o. · IČO: 23672161</div>
+            <div class="footer-copy">2026 Bite Marks s.r.o. · Příční 1892/4, Praha · IČO: 23672161</div>
         </div>
     </div>
 </footer>
