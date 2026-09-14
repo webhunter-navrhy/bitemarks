@@ -1132,6 +1132,10 @@
             <span class="events-count" id="evCount"></span>
         </div>
 
+        <div class="filters reveal" id="monthsBar">
+            <button class="filter-btn on" data-m="all">Všechny měsíce</button>
+        </div>
+
         <div class="filters reveal" id="filtersBar">
             <button class="filter-btn on" data-f="all">Všechny</button>
             <div class="filter-sep"></div>
@@ -1432,27 +1436,57 @@ function render(events) {
     document.getElementById('evCount').textContent = events.length + ' akcí';
 }
 
+// Build month filter buttons from data
+const MONTHS_NAMES = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
+const monthsInData = [...new Set(DATA.map(e => new Date(e.date).getMonth()))].sort((a, b) => a - b);
+const monthsBar = document.getElementById('monthsBar');
+monthsInData.forEach(m => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.m = String(m);
+    btn.textContent = MONTHS_NAMES[m];
+    monthsBar.appendChild(btn);
+});
+
 // Filters
 let activeFilter = 'all';
+let activeMonth = 'all';
 
 document.getElementById('filtersBar').addEventListener('click', e => {
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('#filtersBar .filter-btn').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
     activeFilter = btn.dataset.f;
     applyFilter();
 });
 
+document.getElementById('monthsBar').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('#monthsBar .filter-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    activeMonth = btn.dataset.m;
+    applyFilter();
+});
+
 function applyFilter() {
     let filtered = DATA;
+
+    // Month filter
+    if (activeMonth !== 'all') {
+        const m = parseInt(activeMonth);
+        filtered = filtered.filter(e => new Date(e.date).getMonth() === m);
+    }
+
+    // Type filter
     switch (activeFilter) {
-        case 'free': filtered = DATA.filter(e => e.isFree); break;
-        case 'paid': filtered = DATA.filter(e => !e.isFree); break;
-        case 'speakers': filtered = DATA.filter(e => e.seeksSpeakers); break;
-        case 'sponsors': filtered = DATA.filter(e => e.seeksSponsors); break;
-        case 'prague': filtered = DATA.filter(e => e.isPrague); break;
-        case 'outside': filtered = DATA.filter(e => !e.isPrague); break;
+        case 'free': filtered = filtered.filter(e => e.isFree); break;
+        case 'paid': filtered = filtered.filter(e => !e.isFree); break;
+        case 'speakers': filtered = filtered.filter(e => e.seeksSpeakers); break;
+        case 'sponsors': filtered = filtered.filter(e => e.seeksSponsors); break;
+        case 'prague': filtered = filtered.filter(e => e.isPrague); break;
+        case 'outside': filtered = filtered.filter(e => !e.isPrague); break;
     }
     render(filtered);
 }
