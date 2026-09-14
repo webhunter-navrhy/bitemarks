@@ -1235,67 +1235,61 @@
                 <p class="section-subtitle reveal">Po odeslání se s vámi ozveme do 24 hodin. Platba probíhá až po schválení.</p>
                 <div class="reveal">
                     <div class="form-card">
-                        <form id="eForm" onsubmit="handleSubmit(event)">
+                        <form id="eForm" action="https://formspree.io/f/xwpkvgby" method="POST">
                             <div class="fg">
                                 <label class="fl">Název akce <span class="req">*</span></label>
-                                <input type="text" class="fi" placeholder="např. WebExpo 2026" required>
+                                <input type="text" name="nazev_akce" class="fi" placeholder="např. WebExpo 2026" required>
                             </div>
                             <div class="f-row">
-                                <div class="fg"><label class="fl">Datum <span class="req">*</span></label><input type="date" class="fi" required></div>
-                                <div class="fg"><label class="fl">Čas zahájení</label><input type="time" class="fi"></div>
+                                <div class="fg"><label class="fl">Datum <span class="req">*</span></label><input type="date" name="datum" class="fi" required></div>
+                                <div class="fg"><label class="fl">Čas zahájení</label><input type="time" name="cas" class="fi"></div>
                             </div>
                             <div class="f-row">
                                 <div class="fg">
                                     <label class="fl">Město <span class="req">*</span></label>
-                                    <select class="fsel" required>
+                                    <select name="mesto" class="fsel" required>
                                         <option value="" disabled selected>Vyberte město</option>
                                         <option>Praha</option><option>Brno</option><option>Ostrava</option>
                                         <option>Plzeň</option><option>Olomouc</option><option>Liberec</option><option>Jiné</option>
                                     </select>
                                 </div>
-                                <div class="fg"><label class="fl">Místo konání</label><input type="text" class="fi" placeholder="např. Forum Karlín"></div>
+                                <div class="fg"><label class="fl">Místo konání</label><input type="text" name="misto" class="fi" placeholder="např. Forum Karlín"></div>
                             </div>
                             <div class="fg">
                                 <label class="fl">Vstupné <span class="req">*</span></label>
                                 <div class="f-checkgroup">
-                                    <label class="f-check"><input type="radio" name="entry" value="free" required><span>Zdarma</span></label>
-                                    <label class="f-check"><input type="radio" name="entry" value="paid"><span>Placený vstup</span></label>
+                                    <label class="f-check"><input type="radio" name="vstupne" value="Zdarma" required><span>Zdarma</span></label>
+                                    <label class="f-check"><input type="radio" name="vstupne" value="Placený vstup"><span>Placený vstup</span></label>
                                 </div>
                             </div>
                             <div class="fg">
                                 <label class="fl">Hledáte...</label>
                                 <div class="f-checkgroup">
-                                    <label class="f-check"><input type="checkbox" name="look" value="spk"><span>Speakery</span></label>
-                                    <label class="f-check"><input type="checkbox" name="look" value="spo"><span>Sponzory</span></label>
+                                    <label class="f-check"><input type="checkbox" name="hledame" value="Speakery"><span>Speakery</span></label>
+                                    <label class="f-check"><input type="checkbox" name="hledame" value="Sponzory"><span>Sponzory</span></label>
                                 </div>
                             </div>
                             <div class="fg">
                                 <label class="fl">Popis akce <span class="req">*</span></label>
-                                <textarea class="fta" placeholder="O čem akce bude, komu je určená..." required></textarea>
+                                <textarea name="popis" class="fta" placeholder="O čem akce bude, komu je určená..." required></textarea>
                             </div>
                             <div class="f-row">
-                                <div class="fg"><label class="fl">Web akce</label><input type="url" class="fi" placeholder="https://..."></div>
-                                <div class="fg"><label class="fl">Registrace</label><input type="url" class="fi" placeholder="https://..."></div>
-                            </div>
-                            <div class="fg">
-                                <label class="fl">Vizuál</label>
-                                <div class="f-drop" id="dz">
-                                    <p>Přetáhněte soubor nebo <strong>vyberte z počítače</strong></p>
-                                    <p class="sm">PNG, JPG, SVG do 5 MB</p>
-                                    <input type="file" accept="image/*" style="display:none" id="fileInput">
-                                </div>
+                                <div class="fg"><label class="fl">Web akce</label><input type="url" name="web" class="fi" placeholder="https://..."></div>
+                                <div class="fg"><label class="fl">Registrace</label><input type="url" name="registrace" class="fi" placeholder="https://..."></div>
                             </div>
                             <div class="f-row">
-                                <div class="fg"><label class="fl">Email <span class="req">*</span></label><input type="email" class="fi" placeholder="vas@email.cz" required></div>
-                                <div class="fg"><label class="fl">Jméno</label><input type="text" class="fi" placeholder="Jan Novák"></div>
+                                <div class="fg"><label class="fl">Email <span class="req">*</span></label><input type="email" name="email" class="fi" placeholder="vas@email.cz" required></div>
+                                <div class="fg"><label class="fl">Jméno</label><input type="text" name="jmeno" class="fi" placeholder="Jan Novák"></div>
                             </div>
                             <div class="fg">
                                 <label class="fl">Balíček <span class="req">*</span></label>
                                 <div class="f-checkgroup">
-                                    <label class="f-check"><input type="radio" name="pkg" value="basic" required><span>Základní, 990 Kč</span></label>
-                                    <label class="f-check"><input type="radio" name="pkg" value="premium"><span>Premium, 2 490 Kč</span></label>
+                                    <label class="f-check"><input type="radio" name="balicek" value="Základní, 990 Kč" required><span>Základní, 990 Kč</span></label>
+                                    <label class="f-check"><input type="radio" name="balicek" value="Premium, 2 490 Kč"><span>Premium, 2 490 Kč</span></label>
                                 </div>
                             </div>
+                            <input type="hidden" name="_subject" value="Nová akce ke schválení — Kalendář akcí">
+                            <input type="hidden" name="_next" value="https://akce.bitemarks.cz/?sent=1">
                             <button type="submit" class="btn-orange" style="width:100%;margin-top:4px;">Odeslat ke schválení</button>
                         </form>
                     </div>
@@ -1622,15 +1616,14 @@ fileInput.addEventListener('change', () => {
     if (fileInput.files.length) dropzone.querySelector('p').innerHTML = '<strong>' + fileInput.files[0].name + '</strong>';
 });
 
-// Form submit
-function handleSubmit(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('.btn-orange');
-    const original = btn.innerHTML;
-    btn.textContent = 'Odesláno. Ozveme se do 24 h.';
-    btn.style.background = 'var(--green)';
-    btn.disabled = true;
-    setTimeout(() => { btn.innerHTML = original; btn.style.background = ''; btn.disabled = false; }, 3000);
+// Form sent confirmation
+if (new URLSearchParams(window.location.search).has('sent')) {
+    window.addEventListener('DOMContentLoaded', () => {
+        const f = document.getElementById('eForm');
+        if (f) {
+            f.innerHTML = '<div style="text-align:center;padding:3rem 1rem"><p style="font-size:1.5rem;font-weight:600;color:var(--green);margin-bottom:1rem">✓ Odesláno</p><p style="color:#666">Děkujeme za přihlášení akce. Ozveme se do 24 hodin.</p></div>';
+        }
+    });
 }
 
 // Load data and render
