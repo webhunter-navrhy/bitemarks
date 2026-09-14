@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalendář akcí — Bite Marks</title>
+    <link rel="icon" href="https://www.bitemarks.cz/wp-content/uploads/2025/12/cropped-Bite-Marks-Media_Favicona_Blue-32x32.webp" sizes="32x32">
+    <link rel="icon" href="https://www.bitemarks.cz/wp-content/uploads/2025/12/cropped-Bite-Marks-Media_Favicona_Blue-192x192.webp" sizes="192x192">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Overpass:wght@400;600;700&display=swap" rel="stylesheet">
@@ -75,15 +77,15 @@
         }
 
         .logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark);
             text-decoration: none;
-            letter-spacing: -0.02em;
+            display: inline-flex;
+            align-items: center;
         }
 
-        .logo span { color: var(--c1); }
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
 
         .header-nav {
             display: flex;
@@ -808,8 +810,7 @@
             justify-content: space-between;
         }
 
-        .footer .logo { color: #fff; }
-        .footer .logo span { color: var(--c1); }
+        .footer .logo img { height: 45px; filter: brightness(0) invert(1); }
 
         .footer-links {
             display: flex;
@@ -1009,12 +1010,13 @@
 <header class="header">
     <div class="container">
         <div class="header-inner">
-            <a href="#" class="logo">Bite<span>Marks</span></a>
+            <a href="https://www.bitemarks.cz" class="logo"><img src="https://bitemarksmedia.com/wp-content/uploads/2024/10/Bite-Marks-Media_Logo.webp" alt="Bite Marks"></a>
             <nav>
                 <ul class="header-nav" id="headerNav">
-                    <li><a href="#kalendar">Kalendář</a></li>
-                    <li><a href="#cenik">Ceník</a></li>
-                    <li><a href="#pridat">Přidat akci</a></li>
+                    <li><a href="https://www.bitemarks.cz/rubriky/kariera/">Kariéra</a></li>
+                    <li><a href="https://www.bitemarks.cz/rubriky/business/">Business</a></li>
+                    <li><a href="https://www.bitemarks.cz/rubriky/zdravi/">Zdraví</a></li>
+                    <li><a href="#kalendar" style="color:var(--c1)">Kalendář akcí</a></li>
                 </ul>
             </nav>
             <a href="#pridat" class="header-cta">Přidat akci</a>
@@ -1273,15 +1275,14 @@
 <footer class="footer">
     <div class="container">
         <div class="footer-inner">
-            <a href="#" class="logo">Bite<span>Marks</span></a>
+            <a href="https://www.bitemarks.cz" class="logo"><img src="https://bitemarksmedia.com/wp-content/uploads/2024/10/Bite-Marks-Media_Logo.webp" alt="Bite Marks"></a>
             <ul class="footer-links">
-                <li><a href="#">Kariéra</a></li>
-                <li><a href="#">Byznys</a></li>
-                <li><a href="#">Zdraví</a></li>
-                <li><a href="#">Podmínky</a></li>
-                <li><a href="#">Kontakt</a></li>
+                <li><a href="https://www.bitemarks.cz/rubriky/kariera/">Kariéra</a></li>
+                <li><a href="https://www.bitemarks.cz/rubriky/business/">Business</a></li>
+                <li><a href="https://www.bitemarks.cz/rubriky/zdravi/">Zdraví</a></li>
+                <li><a href="mailto:valerie.cizkova@bitemarks.cz">Kontakt</a></li>
             </ul>
-            <div class="footer-copy">2026 Bite Marks s.r.o.</div>
+            <div class="footer-copy">2026 Bite Marks s.r.o. · IČO: 23672161</div>
         </div>
     </div>
 </footer>
