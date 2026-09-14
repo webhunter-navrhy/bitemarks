@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalendář akcí — Bite Marks</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Overpass:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --c1: #0097b2;
+            --c1h: #007d94;
+            --c2: #f76a0c;
+            --c3: #ff5757;
+            --dark: #020202;
+            --t1: #2D3748;
+            --t2: #4A5568;
+            --t3: #718096;
+            --t4: #A0AEC0;
+            --bg: #f3f3f3;
+            --bg2: #F7FAFC;
+            --w: #ffffff;
+            --line: #E2E8F0;
+            --line2: #718096;
+            --green: #0E7A3A;
+            --green-bg: #ECFDF5;
+            --amber: #92400E;
+            --amber-bg: #FFFBEB;
+            --blue: #1159af;
+            --blue-bg: #EFF6FF;
+            --violet: #6D28D9;
+            --violet-bg: #F5F3FF;
+            --shadow-card: 0px 15px 15px -10px rgba(0,0,0,0.05);
+            --shadow-hover: 0px 15px 25px -7px rgba(0,0,0,0.1);
+            --shadow-section: 0px 35px 30px -5px rgba(0, 0, 0, 0.06);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--w);
+            color: var(--t1);
+            font-size: 17px;
+            font-weight: 400;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection { background: rgba(0,151,178,0.15); }
+
+        .container {
+            max-width: 1720px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            border-bottom: 1px solid var(--line);
+            background: var(--w);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 80px;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .logo span { color: var(--c1); }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 2em;
+            list-style: none;
+        }
+
+        .header-nav a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: color 0.15s;
+        }
+
+        .header-nav a:hover { color: var(--c1); }
+
+        .header-cta {
+            font-family: 'Overpass', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: capitalize;
+            background: var(--c1);
+            color: #fff;
+            padding: 13px 28px;
+            border-radius: 10px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.15s, box-shadow 0.2s;
+        }
+
+        .header-cta:hover {
+            background: var(--c1h);
+            box-shadow: 0px 15px 25px -7px rgba(0,0,0,0.1);
+        }
+
+        .burger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+
+        /* ── MAIN GRID (55/10/35) ── */
+        .grid-section {
+            display: grid;
+            grid-template-columns: 55fr 10fr 35fr;
+            gap: 1rem;
+        }
+
+        .col-main { }
+        .col-deco {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .sideways {
+            writing-mode: sideways-lr;
+            text-orientation: sideways;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--t4);
+            white-space: nowrap;
+        }
+
+        .col-deco::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+            background: var(--line);
+        }
+
+        .col-side { }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--line2);
+        }
+
+        .hero .col-main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.15;
+            color: var(--dark);
+            margin-bottom: 1.25rem;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--c1);
+        }
+
+        .hero-desc {
+            font-size: 17px;
+            color: var(--t2);
+            line-height: 1.7;
+            max-width: 480px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            font-family: 'Overpass', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: capitalize;
+            background: var(--c1);
+            color: #fff;
+            padding: 13px 28px;
+            border-radius: 10px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.15s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary:hover {
+            background: var(--c1h);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-secondary {
+            font-family: 'Overpass', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: capitalize;
+            background: var(--bg);
+            color: var(--t1);
+            padding: 13px 28px;
+            border-radius: 10px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--line);
+        }
+
+        .btn-orange {
+            font-family: 'Overpass', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: capitalize;
+            background: var(--c2);
+            color: #fff;
+            padding: 13px 28px;
+            border-radius: 10px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.15s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-orange:hover {
+            background: #e05e08;
+            box-shadow: 0px 15px 25px -7px rgba(247,106,12,0.2);
+        }
+
+        /* Hero sidebar - featured event */
+        .hero-featured {
+            background: var(--w);
+            border-radius: 6px;
+            box-shadow: var(--shadow-card);
+            padding: 2rem;
+            border-top: 3px solid var(--c1);
+        }
+
+        .hero-featured-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--c1);
+            margin-bottom: 1rem;
+        }
+
+        .hero-featured-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-featured-meta {
+            font-size: 14px;
+            color: var(--t3);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-featured-meta strong {
+            color: var(--t1);
+            font-weight: 500;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--line);
+        }
+
+        .hero-stat-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            line-height: 1;
+        }
+
+        .hero-stat-label {
+            font-size: 13px;
+            color: var(--t3);
+            margin-top: 4px;
+        }
+
+        /* ── EVENTS ── */
+        .events-section {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--line2);
+        }
+
+        .events-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .events-count {
+            font-size: 14px;
+            color: var(--t4);
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-btn {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--line);
+            background: var(--w);
+            color: var(--t2);
+            cursor: pointer;
+            transition: all 0.12s;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover { border-color: var(--c1); color: var(--c1); }
+        .filter-btn.on { background: var(--c1); color: #fff; border-color: var(--c1); }
+
+        .filter-sep {
+            width: 1px;
+            height: 20px;
+            background: var(--line);
+            margin: 0 4px;
+        }
+
+        /* Event list */
+        .ev-list { display: flex; flex-direction: column; }
+
+        .ev-row {
+            display: grid;
+            grid-template-columns: 72px 1fr auto auto;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.125rem 1.5rem;
+            background: var(--w);
+            border: 1px solid var(--line);
+            border-top: none;
+            cursor: pointer;
+            transition: background 0.12s;
+        }
+
+        .ev-row:first-child { border-top: 1px solid var(--line); border-radius: 6px 6px 0 0; }
+        .ev-row:last-child { border-radius: 0 0 6px 6px; }
+        .ev-row:only-child { border-radius: 6px; border-top: 1px solid var(--line); }
+        .ev-row:hover { background: rgba(0,151,178,0.04); }
+        .ev-row.premium { border-left: 3px solid var(--c1); }
+
+        .ev-date-block { text-align: center; }
+
+        .ev-date-day {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+            line-height: 1;
+        }
+
+        .ev-date-month {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--c1);
+            margin-top: 2px;
+        }
+
+        .ev-info {}
+
+        .ev-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .ev-meta {
+            font-size: 14px;
+            color: var(--t3);
+            margin-top: 2px;
+        }
+
+        .ev-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .tag-gr { background: var(--green-bg); color: var(--green); }
+        .tag-am { background: var(--amber-bg); color: var(--amber); }
+        .tag-bl { background: var(--blue-bg); color: var(--blue); }
+        .tag-vi { background: var(--violet-bg); color: var(--violet); }
+
+        .ev-arrow {
+            color: var(--t4);
+            transition: color 0.12s, transform 0.12s;
+        }
+
+        .ev-row:hover .ev-arrow { color: var(--c1); transform: translateX(3px); }
+
+        /* ── PRICING + HOW ── */
+        .pricing-section {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--line2);
+        }
+
+        .pricing-section .col-main {
+            padding-right: 2rem;
+        }
+
+        .section-subtitle {
+            font-size: 17px;
+            color: var(--t2);
+            margin-top: 0.5rem;
+            margin-bottom: 2.5rem;
+            max-width: 440px;
+            line-height: 1.7;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .price-card {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: var(--shadow-card);
+            transition: box-shadow 0.2s;
+        }
+
+        .price-card:hover { box-shadow: var(--shadow-hover); }
+
+        .price-card.highlight {
+            border-color: var(--c1);
+            border-width: 2px;
+            padding: calc(2rem - 1px);
+        }
+
+        .price-badge {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: var(--c1);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 4px;
+        }
+
+        .price-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .price-desc {
+            font-size: 14px;
+            color: var(--t3);
+            margin-bottom: 1.5rem;
+        }
+
+        .price-amount {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+
+        .price-amount small {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--t3);
+        }
+
+        .price-per {
+            font-size: 13px;
+            color: var(--t4);
+            margin-top: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .price-list li {
+            font-size: 15px;
+            color: var(--t2);
+            padding: 5px 0;
+            padding-left: 1.25rem;
+            position: relative;
+        }
+
+        .price-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 13px;
+            width: 6px;
+            height: 2px;
+            background: var(--c1);
+        }
+
+        .price-card .btn-primary,
+        .price-card .btn-secondary {
+            width: 100%;
+            justify-content: center;
+            font-size: 16px;
+            padding: 11px 20px;
+        }
+
+        /* How it works - sidebar */
+        .how-sidebar {
+            padding: 2rem;
+            background: var(--dark);
+            border-radius: 6px;
+            color: #fff;
+        }
+
+        .how-sidebar-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .how-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .how-step:last-child { margin-bottom: 0; }
+
+        .how-step-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--c1);
+            letter-spacing: 0.08em;
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        .how-step-text {
+            font-size: 15px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.5;
+        }
+
+        .how-step-text strong {
+            color: #fff;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .how-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin-bottom: 1.75rem;
+        }
+
+        /* ── FORM ── */
+        .form-section {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--line2);
+            background: var(--bg2);
+        }
+
+        .form-section .col-main {
+            padding-right: 2rem;
+        }
+
+        .form-card {
+            background: var(--w);
+            border-radius: 6px;
+            box-shadow: var(--shadow-card);
+            padding: 2rem;
+        }
+
+        .fg { margin-bottom: 1rem; }
+
+        .fl {
+            display: block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--t1);
+            margin-bottom: 6px;
+        }
+
+        .fl .req { color: var(--c3); }
+
+        .fi, .fsel, .fta {
+            width: 100%;
+            background: var(--bg2);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: var(--t1);
+            outline: none;
+            transition: border-color 0.12s, box-shadow 0.12s;
+        }
+
+        .fi:focus, .fsel:focus, .fta:focus {
+            border-color: var(--c1);
+            box-shadow: 0 0 0 3px rgba(0,151,178,0.08);
+            background: var(--w);
+        }
+
+        .fi::placeholder, .fta::placeholder { color: var(--t4); }
+
+        .fsel {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23718096' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        .fta { min-height: 90px; resize: vertical; }
+        .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .f-checkgroup { display: flex; flex-wrap: wrap; gap: 1rem; }
+        .f-check { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .f-check input { width: 16px; height: 16px; accent-color: var(--c1); cursor: pointer; }
+        .f-check span { font-size: 14px; color: var(--t2); }
+
+        .f-drop {
+            border: 2px dashed var(--line);
+            border-radius: 6px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.12s;
+        }
+        .f-drop:hover { border-color: var(--c1); }
+        .f-drop p { font-size: 14px; color: var(--t3); }
+        .f-drop strong { color: var(--c1); }
+        .f-drop .sm { font-size: 12px; color: var(--t4); margin-top: 4px; }
+
+        /* Form sidebar info */
+        .form-info-card {
+            padding: 2rem;
+            border-radius: 6px;
+            background: var(--w);
+            box-shadow: var(--shadow-card);
+        }
+
+        .form-info-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .form-info-text {
+            font-size: 15px;
+            color: var(--t2);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .info-block {
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--line);
+            margin-bottom: 1.75rem;
+        }
+
+        .info-block:last-child { margin-bottom: 0; }
+
+        .info-block h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .info-block ul { list-style: none; }
+
+        .info-block li {
+            font-size: 14px;
+            color: var(--t2);
+            padding: 4px 0;
+            padding-left: 1rem;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .info-block li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 11px;
+            width: 5px;
+            height: 2px;
+            background: var(--c1);
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: var(--dark);
+            padding: 2.5rem 0;
+            border-top: 1px solid #3e3063;
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer .logo { color: #fff; }
+        .footer .logo span { color: var(--c1); }
+
+        .footer-links {
+            display: flex;
+            gap: 2em;
+            list-style: none;
+        }
+
+        .footer-links a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.35);
+            text-decoration: none;
+            transition: color 0.12s;
+        }
+
+        .footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+        .footer-copy {
+            font-size: 13px;
+            color: rgba(255,255,255,0.2);
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(3px);
+            z-index: 200;
+            opacity: 0; visibility: hidden;
+            transition: all 0.2s;
+        }
+        .modal-overlay.on { opacity: 1; visibility: visible; }
+
+        .modal {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%) scale(0.97);
+            background: var(--w);
+            border-radius: 6px;
+            width: min(92vw, 640px);
+            max-height: 88vh;
+            overflow-y: auto;
+            z-index: 201;
+            opacity: 0; visibility: hidden;
+            transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 25px 50px -10px rgba(0,0,0,0.2);
+        }
+        .modal.on { opacity: 1; visibility: visible; transform: translate(-50%,-50%) scale(1); }
+
+        .modal-close {
+            position: absolute; top: 12px; right: 12px;
+            background: var(--bg);
+            border: 1px solid var(--line);
+            width: 32px; height: 32px;
+            border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 5; color: var(--t3);
+            transition: background 0.12s;
+        }
+        .modal-close:hover { background: var(--line); color: var(--dark); }
+
+        .modal-header {
+            height: 100px;
+            background: linear-gradient(135deg, rgba(0,151,178,0.06) 0%, var(--bg) 100%);
+            border-bottom: 2px solid var(--c1);
+        }
+
+        .modal-body { padding: 2rem; }
+
+        .modal-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 0.75rem; }
+
+        .modal-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px; font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .modal-org { font-size: 14px; color: var(--t3); margin-bottom: 1.5rem; }
+
+        .modal-info-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 10px; margin-bottom: 1.5rem;
+        }
+
+        .modal-info-item {
+            background: var(--bg); border-radius: 6px; padding: 12px 14px;
+        }
+
+        .modal-info-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 10px; font-weight: 600;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--t4); margin-bottom: 2px;
+        }
+
+        .modal-info-value { font-size: 15px; font-weight: 500; color: var(--dark); }
+
+        .modal-desc-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px; font-weight: 700;
+            color: var(--dark); margin-bottom: 8px;
+        }
+
+        .modal-desc { font-size: 15px; color: var(--t2); line-height: 1.7; margin-bottom: 1.5rem; }
+
+        .modal-topic-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 1.75rem; }
+        .modal-topic-tag {
+            font-size: 12px; font-weight: 500;
+            padding: 4px 10px; border-radius: 4px;
+            background: var(--bg); color: var(--t2);
+            border: 1px solid var(--line);
+        }
+
+        .modal-btns { display: flex; gap: 10px; }
+        .modal-btns .btn-primary,
+        .modal-btns .btn-secondary {
+            flex: 1; justify-content: center; font-size: 16px; padding: 11px 20px;
+        }
+
+        /* ── REVEAL ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s, transform 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
+        .reveal.v { opacity: 1; transform: none; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .grid-section {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .col-deco { display: none; }
+
+            .hero { padding: 3rem 0; }
+
+            .hero h1 { font-size: 35px; }
+
+            .pricing-section .col-main,
+            .form-section .col-main { padding-right: 0; }
+
+            .section-title { font-size: 25px; }
+        }
+
+        @media (max-width: 768px) {
+            .header-nav { display: none; }
+            .burger { display: block; }
+
+            .header-nav.open {
+                display: flex; flex-direction: column;
+                position: absolute; top: 80px; left: 0; right: 0;
+                background: var(--w); border-bottom: 1px solid var(--line);
+                padding: 1rem 1.5rem;
+                box-shadow: 0 12px 24px -8px rgba(0,0,0,0.08);
+            }
+
+            .hero h1 { font-size: 30px; }
+            .hero-btns { flex-direction: column; }
+            .hero-btns .btn-primary,
+            .hero-btns .btn-secondary { text-align: center; justify-content: center; }
+
+            .pricing-grid { grid-template-columns: 1fr; }
+
+            .ev-row {
+                grid-template-columns: 56px 1fr;
+                gap: 1rem;
+            }
+            .ev-tags, .ev-arrow { display: none; }
+
+            .f-row { grid-template-columns: 1fr; }
+
+            .modal-info-grid { grid-template-columns: 1fr; }
+            .modal-btns { flex-direction: column; }
+            .modal-body { padding: 1.5rem; }
+
+            .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
+            .footer-links { flex-wrap: wrap; justify-content: center; gap: 1em; }
+
+            .filters { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+        }
+
+        @media (max-width: 480px) {
+            body { font-size: 16px; }
+            .hero h1 { font-size: 26px; }
+            .events-section { padding: 3rem 0; }
+            .pricing-section { padding: 3rem 0; }
+            .form-section { padding: 3rem 0; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="header-inner">
+            <a href="#" class="logo">Bite<span>Marks</span></a>
+            <nav>
+                <ul class="header-nav" id="headerNav">
+                    <li><a href="#kalendar">Kalendář</a></li>
+                    <li><a href="#cenik">Ceník</a></li>
+                    <li><a href="#pridat">Přidat akci</a></li>
+                </ul>
+            </nav>
+            <a href="#pridat" class="header-cta">Přidat akci</a>
+            <button class="burger" id="burger" aria-label="Menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container">
+        <div class="grid-section">
+            <div class="col-main">
+                <h1>Kalendář <em>akcí</em><br>pro byznys a kariéru</h1>
+                <p class="hero-desc">Konference, meetupy a workshopy na jednom místě. Filtrujte podle vstupného, lokality i příležitostí. Nebo přidejte vlastní akci a oslovte naši komunitu.</p>
+                <div class="hero-btns">
+                    <a href="#kalendar" class="btn-primary">Prohlédnout akce</a>
+                    <a href="#cenik" class="btn-secondary">Přidat svou akci</a>
+                </div>
+            </div>
+            <div class="col-deco">
+                <span class="sideways">Akce</span>
+            </div>
+            <div class="col-side">
+                <div class="hero-featured">
+                    <div class="hero-featured-label">Nejbližší akce</div>
+                    <div class="hero-featured-name">WebExpo 2026</div>
+                    <div class="hero-featured-meta">
+                        <strong>15. října 2026</strong><br>
+                        Forum Karlín, Praha<br>
+                        Vstup placený
+                    </div>
+                    <a href="#kalendar" class="btn-primary" style="width:100%;justify-content:center;font-size:16px;padding:11px 20px;">Zobrazit detail</a>
+                    <div class="hero-stats">
+                        <div>
+                            <div class="hero-stat-num">9</div>
+                            <div class="hero-stat-label">akcí v kalendáři</div>
+                        </div>
+                        <div>
+                            <div class="hero-stat-num">5</div>
+                            <div class="hero-stat-label">měst po celé ČR</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- EVENTS -->
+<section class="events-section" id="kalendar">
+    <div class="container">
+        <div class="events-header reveal">
+            <h2 class="section-title">Nadcházející akce</h2>
+            <span class="events-count" id="evCount"></span>
+        </div>
+
+        <div class="filters reveal" id="filtersBar">
+            <button class="filter-btn on" data-f="all">Všechny</button>
+            <div class="filter-sep"></div>
+            <button class="filter-btn" data-f="free">Vstup zdarma</button>
+            <button class="filter-btn" data-f="paid">Placený</button>
+            <div class="filter-sep"></div>
+            <button class="filter-btn" data-f="speakers">Hledají speakery</button>
+            <button class="filter-btn" data-f="sponsors">Hledají sponzory</button>
+            <div class="filter-sep"></div>
+            <button class="filter-btn" data-f="prague">Praha</button>
+            <button class="filter-btn" data-f="outside">Mimo Prahu</button>
+        </div>
+
+        <div id="evContainer" class="reveal"></div>
+    </div>
+</section>
+
+<!-- PRICING + HOW -->
+<section class="pricing-section" id="cenik">
+    <div class="container">
+        <div class="grid-section">
+            <div class="col-main">
+                <h2 class="section-title reveal">Ceník zařazení</h2>
+                <p class="section-subtitle reveal">Oslovte tisíce lidí, kteří aktivně hledají svůj další event.</p>
+                <div class="pricing-grid reveal">
+                    <div class="price-card">
+                        <div class="price-name">Základní</div>
+                        <p class="price-desc">Pro meetupy a komunitní akce</p>
+                        <div class="price-amount">990 <small>Kč</small></div>
+                        <div class="price-per">jednorázově za akci</div>
+                        <ul class="price-list">
+                            <li>Zápis do kalendáře</li>
+                            <li>Detail s popisem a odkazem</li>
+                            <li>Filtry a vyhledávání</li>
+                            <li>Zobrazení na hlavní stránce</li>
+                        </ul>
+                        <a href="#pridat" class="btn-secondary">Vybrat Základní</a>
+                    </div>
+                    <div class="price-card highlight">
+                        <div class="price-badge">Nejoblíbenější</div>
+                        <div class="price-name">Premium</div>
+                        <p class="price-desc">Pro konference a velké eventy</p>
+                        <div class="price-amount">2 490 <small>Kč</small></div>
+                        <div class="price-per">jednorázově za akci</div>
+                        <ul class="price-list">
+                            <li>Vše ze Základního</li>
+                            <li>Zvýrazněný zápis v kalendáři</li>
+                            <li>Sdílení na sociálních sítích</li>
+                            <li>Zmínka v newsletteru</li>
+                            <li>Prioritní podpora</li>
+                        </ul>
+                        <a href="#pridat" class="btn-primary">Vybrat Premium</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-deco">
+                <span class="sideways">Ceník</span>
+            </div>
+            <div class="col-side reveal">
+                <div class="how-sidebar">
+                    <div class="how-sidebar-title">Jak to funguje</div>
+                    <div class="how-step">
+                        <span class="how-step-num">01</span>
+                        <div class="how-step-text">
+                            <strong>Vyberte balíček</strong>
+                            Základní pro meetupy, Premium pro konference a velké eventy.
+                        </div>
+                    </div>
+                    <div class="how-divider"></div>
+                    <div class="how-step">
+                        <span class="how-step-num">02</span>
+                        <div class="how-step-text">
+                            <strong>Vyplňte formulář</strong>
+                            Nahrajte podklady k akci. Schválení proběhne do 24 hodin.
+                        </div>
+                    </div>
+                    <div class="how-divider"></div>
+                    <div class="how-step">
+                        <span class="how-step-num">03</span>
+                        <div class="how-step-text">
+                            <strong>Akce je v kalendáři</strong>
+                            Po schválení se akce zobrazí tisícům návštěvníků Bite Marks.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FORM -->
+<section class="form-section" id="pridat">
+    <div class="container">
+        <div class="grid-section">
+            <div class="col-main">
+                <h2 class="section-title reveal">Vyplňte podklady k vaší akci</h2>
+                <p class="section-subtitle reveal">Po odeslání se s vámi ozveme do 24 hodin. Platba probíhá až po schválení.</p>
+                <div class="reveal">
+                    <div class="form-card">
+                        <form id="eForm" onsubmit="handleSubmit(event)">
+                            <div class="fg">
+                                <label class="fl">Název akce <span class="req">*</span></label>
+                                <input type="text" class="fi" placeholder="např. WebExpo 2026" required>
+                            </div>
+                            <div class="f-row">
+                                <div class="fg"><label class="fl">Datum <span class="req">*</span></label><input type="date" class="fi" required></div>
+                                <div class="fg"><label class="fl">Čas zahájení</label><input type="time" class="fi"></div>
+                            </div>
+                            <div class="f-row">
+                                <div class="fg">
+                                    <label class="fl">Město <span class="req">*</span></label>
+                                    <select class="fsel" required>
+                                        <option value="" disabled selected>Vyberte město</option>
+                                        <option>Praha</option><option>Brno</option><option>Ostrava</option>
+                                        <option>Plzeň</option><option>Olomouc</option><option>Liberec</option><option>Jiné</option>
+                                    </select>
+                                </div>
+                                <div class="fg"><label class="fl">Místo konání</label><input type="text" class="fi" placeholder="např. Forum Karlín"></div>
+                            </div>
+                            <div class="fg">
+                                <label class="fl">Vstupné <span class="req">*</span></label>
+                                <div class="f-checkgroup">
+                                    <label class="f-check"><input type="radio" name="entry" value="free" required><span>Zdarma</span></label>
+                                    <label class="f-check"><input type="radio" name="entry" value="paid"><span>Placený vstup</span></label>
+                                </div>
+                            </div>
+                            <div class="fg">
+                                <label class="fl">Hledáte...</label>
+                                <div class="f-checkgroup">
+                                    <label class="f-check"><input type="checkbox" name="look" value="spk"><span>Speakery</span></label>
+                                    <label class="f-check"><input type="checkbox" name="look" value="spo"><span>Sponzory</span></label>
+                                </div>
+                            </div>
+                            <div class="fg">
+                                <label class="fl">Popis akce <span class="req">*</span></label>
+                                <textarea class="fta" placeholder="O čem akce bude, komu je určená..." required></textarea>
+                            </div>
+                            <div class="f-row">
+                                <div class="fg"><label class="fl">Web akce</label><input type="url" class="fi" placeholder="https://..."></div>
+                                <div class="fg"><label class="fl">Registrace</label><input type="url" class="fi" placeholder="https://..."></div>
+                            </div>
+                            <div class="fg">
+                                <label class="fl">Vizuál</label>
+                                <div class="f-drop" id="dz">
+                                    <p>Přetáhněte soubor nebo <strong>vyberte z počítače</strong></p>
+                                    <p class="sm">PNG, JPG, SVG do 5 MB</p>
+                                    <input type="file" accept="image/*" style="display:none" id="fileInput">
+                                </div>
+                            </div>
+                            <div class="f-row">
+                                <div class="fg"><label class="fl">Email <span class="req">*</span></label><input type="email" class="fi" placeholder="vas@email.cz" required></div>
+                                <div class="fg"><label class="fl">Jméno</label><input type="text" class="fi" placeholder="Jan Novák"></div>
+                            </div>
+                            <div class="fg">
+                                <label class="fl">Balíček <span class="req">*</span></label>
+                                <div class="f-checkgroup">
+                                    <label class="f-check"><input type="radio" name="pkg" value="basic" required><span>Základní, 990 Kč</span></label>
+                                    <label class="f-check"><input type="radio" name="pkg" value="premium"><span>Premium, 2 490 Kč</span></label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-orange" style="width:100%;margin-top:4px;">Odeslat ke schválení</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-deco">
+                <span class="sideways">Formulář</span>
+            </div>
+            <div class="col-side reveal">
+                <div class="form-info-card">
+                    <div class="form-info-title">Proč přidat akci u nás</div>
+                    <p class="form-info-text">Bite Marks je magazín o kariéře, byznysu a zdraví. Naše publikum aktivně hledá příležitosti k rozvoji.</p>
+                    <div class="info-block">
+                        <h4>Dosah</h4>
+                        <ul>
+                            <li>8 500+ návštěvníků měsíčně</li>
+                            <li>5 000+ odběratelů newsletteru</li>
+                            <li>Sdílení na sociálních sítích</li>
+                        </ul>
+                    </div>
+                    <div class="info-block">
+                        <h4>Co budete potřebovat</h4>
+                        <ul>
+                            <li>Název, datum a místo konání</li>
+                            <li>Typ vstupného</li>
+                            <li>Popis a odkaz na registraci</li>
+                            <li>Logo nebo banner (volitelné)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-inner">
+            <a href="#" class="logo">Bite<span>Marks</span></a>
+            <ul class="footer-links">
+                <li><a href="#">Kariéra</a></li>
+                <li><a href="#">Byznys</a></li>
+                <li><a href="#">Zdraví</a></li>
+                <li><a href="#">Podmínky</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+            <div class="footer-copy">2026 Bite Marks s.r.o.</div>
+        </div>
+    </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay"></div>
+<div class="modal" id="modalBox">
+    <button class="modal-close" id="modalClose"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    <div class="modal-header"></div>
+    <div class="modal-body">
+        <div class="modal-tags" id="mTags"></div>
+        <h2 class="modal-name" id="mName"></h2>
+        <p class="modal-org" id="mOrg"></p>
+        <div class="modal-info-grid" id="mGrid"></div>
+        <h3 class="modal-desc-title">O akci</h3>
+        <p class="modal-desc" id="mDesc"></p>
+        <div class="modal-topic-tags" id="mTopics"></div>
+        <div class="modal-btns">
+            <a href="#" class="btn-primary" id="mReg" target="_blank">Registrovat se</a>
+            <a href="#" class="btn-secondary" id="mWeb" target="_blank">Web akce</a>
+        </div>
+    </div>
+</div>
+
+<script>
+const DATA = [
+    {id:1, name:'WebExpo 2026', org:'WebExpo s.r.o.', date:'2026-10-15', time:'09:00', city:'Praha', venue:'Forum Karlín', isPrague:true, isFree:false, seeksSpeakers:true, seeksSponsors:true, desc:'Největší středoevropská konference o webu, designu a digitálním byznysu. Dva dny přednášek, workshopů a networkingu s více než 1 500 účastníky z celého regionu.', topics:['Web','Design','AI','Business'], web:'https://webexpo.net', reg:'https://webexpo.net/tickets', premium:true},
+    {id:2, name:'Product Meetup Brno', org:'ProductBoard Community', date:'2026-10-22', time:'18:00', city:'Brno', venue:'Impact Hub', isPrague:false, isFree:true, seeksSpeakers:true, seeksSponsors:false, desc:'Neformální setkání product managerů a designerů. Tři lightning talky, Q&A a networking u piva.', topics:['Product','Design','Community'], web:'#', reg:'#', premium:false},
+    {id:3, name:'AI Summit Prague', org:'Czech AI Association', date:'2026-11-05', time:'10:00', city:'Praha', venue:'O2 Universum', isPrague:true, isFree:false, seeksSpeakers:false, seeksSponsors:true, desc:'Celodenní konference o praktickém využití AI v českém byznysu. Keynote speakeři z OpenAI, Google DeepMind a českých startupů.', topics:['AI','Machine Learning','Business'], web:'#', reg:'#', premium:true},
+    {id:4, name:'Frontend Developers Meetup', org:'FrontendCZ', date:'2026-10-28', time:'17:30', city:'Praha', venue:'Paralelní Polis', isPrague:true, isFree:true, seeksSpeakers:true, seeksSponsors:false, desc:'Pravidelný meetup pro frontend vývojáře. Server Components, React compiler a moderní CSS.', topics:['Frontend','React','CSS'], web:'#', reg:'#', premium:false},
+    {id:5, name:'Startup Weekend Ostrava', org:'Techstars', date:'2026-11-14', time:'18:00', city:'Ostrava', venue:'MSIC', isPrague:false, isFree:false, seeksSpeakers:false, seeksSponsors:true, desc:'54 hodin intenzivního budování startupů. Mentoři z úspěšných českých firem.', topics:['Startup','Business'], web:'#', reg:'#', premium:false},
+    {id:6, name:'UX Research Conference', org:'UXC Czech Republic', date:'2026-12-03', time:'09:00', city:'Praha', venue:'Slovanský dům', isPrague:true, isFree:false, seeksSpeakers:true, seeksSponsors:true, desc:'Konference o výzkumu uživatelského chování, testování a data-driven designu.', topics:['UX','Research','Design'], web:'#', reg:'#', premium:true},
+    {id:7, name:'DevOps Days Prague', org:'DevOps Community CZ', date:'2026-11-20', time:'08:30', city:'Praha', venue:'CineStar Anděl', isPrague:true, isFree:false, seeksSpeakers:true, seeksSponsors:false, desc:'Komunitní konference o DevOps, SRE a platformním inženýrství. Open Spaces formát.', topics:['DevOps','SRE','Cloud'], web:'#', reg:'#', premium:false},
+    {id:8, name:'Marketing Festival', org:'Marketing Festival s.r.o.', date:'2026-11-27', time:'09:00', city:'Brno', venue:'Sono Centrum', isPrague:false, isFree:false, seeksSpeakers:false, seeksSponsors:true, desc:'Dvoudenní konference o digitálním marketingu, content strategii a brand buildingu.', topics:['Marketing','Content','Brand'], web:'#', reg:'#', premium:true},
+    {id:9, name:'Open Source Hackathon', org:'FOSSCU', date:'2026-10-19', time:'10:00', city:'Plzeň', venue:'Techmania', isPrague:false, isFree:true, seeksSpeakers:false, seeksSponsors:false, desc:'Celý víkend kódování na open source projektech. Mentoring pro začátečníky.', topics:['Open Source','Dev','Community'], web:'#', reg:'#', premium:false}
+];
+
+const MONTHS_SHORT = ['Led','Úno','Bře','Dub','Kvě','Čvn','Čvc','Srp','Zář','Říj','Lis','Pro'];
+const MONTHS_FULL = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
+
+function parseDate(str) {
+    const d = new Date(str);
+    return { day: d.getDate(), monthShort: MONTHS_SHORT[d.getMonth()] };
+}
+
+function formatDateFull(str) {
+    const d = new Date(str);
+    return d.getDate() + '. ' + MONTHS_FULL[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function makeTags(ev) {
+    let h = ev.isFree
+        ? '<span class="tag tag-gr">Zdarma</span>'
+        : '<span class="tag tag-am">Placený</span>';
+    if (ev.seeksSpeakers) h += '<span class="tag tag-bl">Speakery</span>';
+    if (ev.seeksSponsors) h += '<span class="tag tag-vi">Sponzory</span>';
+    return h;
+}
+
+function render(events) {
+    const container = document.getElementById('evContainer');
+    let html = '<div class="ev-list">';
+
+    events.forEach(ev => {
+        const { day, monthShort } = parseDate(ev.date);
+        html += `<div class="ev-row${ev.premium ? ' premium' : ''}" onclick="openModal(${ev.id})">
+            <div class="ev-date-block">
+                <div class="ev-date-day">${day}</div>
+                <div class="ev-date-month">${monthShort}</div>
+            </div>
+            <div class="ev-info">
+                <div class="ev-name">${ev.name}</div>
+                <div class="ev-meta">${ev.org} · ${ev.city}, ${ev.venue}</div>
+            </div>
+            <div class="ev-tags">${makeTags(ev)}</div>
+            <div class="ev-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>`;
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+    document.getElementById('evCount').textContent = events.length + ' akcí';
+}
+
+// Filters
+let activeFilter = 'all';
+
+document.getElementById('filtersBar').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    activeFilter = btn.dataset.f;
+    applyFilter();
+});
+
+function applyFilter() {
+    let filtered = DATA;
+    switch (activeFilter) {
+        case 'free': filtered = DATA.filter(e => e.isFree); break;
+        case 'paid': filtered = DATA.filter(e => !e.isFree); break;
+        case 'speakers': filtered = DATA.filter(e => e.seeksSpeakers); break;
+        case 'sponsors': filtered = DATA.filter(e => e.seeksSponsors); break;
+        case 'prague': filtered = DATA.filter(e => e.isPrague); break;
+        case 'outside': filtered = DATA.filter(e => !e.isPrague); break;
+    }
+    render(filtered);
+}
+
+// Modal
+function openModal(id) {
+    const ev = DATA.find(x => x.id === id);
+    if (!ev) return;
+
+    let tags = ev.isFree
+        ? '<span class="tag tag-gr">Vstup zdarma</span>'
+        : '<span class="tag tag-am">Placený vstup</span>';
+    if (ev.seeksSpeakers) tags += '<span class="tag tag-bl">Hledá speakery</span>';
+    if (ev.seeksSponsors) tags += '<span class="tag tag-vi">Hledá sponzory</span>';
+
+    document.getElementById('mTags').innerHTML = tags;
+    document.getElementById('mName').textContent = ev.name;
+    document.getElementById('mOrg').textContent = 'Pořádá: ' + ev.org;
+    document.getElementById('mDesc').textContent = ev.desc;
+
+    document.getElementById('mGrid').innerHTML = `
+        <div class="modal-info-item"><div class="modal-info-label">Datum</div><div class="modal-info-value">${formatDateFull(ev.date)}</div></div>
+        <div class="modal-info-item"><div class="modal-info-label">Čas</div><div class="modal-info-value">${ev.time || 'Bude upřesněno'}</div></div>
+        <div class="modal-info-item"><div class="modal-info-label">Město</div><div class="modal-info-value">${ev.city}</div></div>
+        <div class="modal-info-item"><div class="modal-info-label">Místo</div><div class="modal-info-value">${ev.venue || 'Bude upřesněno'}</div></div>`;
+
+    document.getElementById('mTopics').innerHTML = ev.topics.map(t => '<span class="modal-topic-tag">' + t + '</span>').join('');
+    document.getElementById('mReg').href = ev.reg || '#';
+    document.getElementById('mWeb').href = ev.web || '#';
+
+    document.getElementById('modalOverlay').classList.add('on');
+    document.getElementById('modalBox').classList.add('on');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('on');
+    document.getElementById('modalBox').classList.remove('on');
+    document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', closeModal);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Burger
+document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('headerNav').classList.toggle('open');
+});
+
+// Reveal animation
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('v');
+    });
+}, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// File upload
+const dropzone = document.getElementById('dz');
+const fileInput = document.getElementById('fileInput');
+
+dropzone.addEventListener('click', () => fileInput.click());
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.style.borderColor = 'var(--c1)'; });
+dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = ''; });
+dropzone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropzone.style.borderColor = '';
+    if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        dropzone.querySelector('p').innerHTML = '<strong>' + e.dataTransfer.files[0].name + '</strong>';
+    }
+});
+fileInput.addEventListener('change', () => {
+    if (fileInput.files.length) dropzone.querySelector('p').innerHTML = '<strong>' + fileInput.files[0].name + '</strong>';
+});
+
+// Form submit
+function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.btn-orange');
+    const original = btn.innerHTML;
+    btn.textContent = 'Odesláno. Ozveme se do 24 h.';
+    btn.style.background = 'var(--green)';
+    btn.disabled = true;
+    setTimeout(() => { btn.innerHTML = original; btn.style.background = ''; btn.disabled = false; }, 3000);
+}
+
+// Initial render
+render(DATA);
+</script>
+</body>
+</html>
