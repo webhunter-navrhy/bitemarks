@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrace — Bite Marks Kalendář</title>
+    <link rel="icon" href="https://www.bitemarks.cz/wp-content/uploads/2025/12/cropped-Bite-Marks-Media_Favicona_Blue-32x32.webp" sizes="32x32">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --c1: #0097b2;
+            --c1h: #007d94;
+            --dark: #020202;
+            --t1: #2D3748;
+            --t2: #4A5568;
+            --t3: #718096;
+            --t4: #A0AEC0;
+            --bg: #f3f3f3;
+            --bg2: #F7FAFC;
+            --w: #ffffff;
+            --line: #E2E8F0;
+            --red: #E53E3E;
+            --green: #0E7A3A;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--t1);
+            font-size: 15px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Login */
+        .login-wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background: var(--w);
+            border-radius: 8px;
+            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.08);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .login-box h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .login-box p { font-size: 14px; color: var(--t3); margin-bottom: 1.5rem; }
+
+        .login-err {
+            background: #FEF2F2;
+            color: var(--red);
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Admin layout */
+        .admin { display: none; }
+        .admin.on { display: block; }
+
+        .admin-header {
+            background: var(--dark);
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .admin-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .admin-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .admin-logo span { color: var(--c1); }
+
+        .admin-badge {
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--c1);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .admin-header-right { display: flex; gap: 0.75rem; }
+
+        .admin-tabs {
+            display: flex;
+            background: var(--w);
+            border-bottom: 1px solid var(--line);
+            padding: 0 1.5rem;
+            gap: 0;
+            overflow-x: auto;
+        }
+
+        .admin-tab {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--t3);
+            background: none;
+            border: none;
+            padding: 14px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: color 0.12s;
+        }
+
+        .admin-tab:hover { color: var(--t1); }
+        .admin-tab.on { color: var(--c1); border-bottom-color: var(--c1); }
+
+        .admin-content {
+            max-width: 960px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .panel { display: none; }
+        .panel.on { display: block; }
+
+        /* Shared form styles */
+        .card {
+            background: var(--w);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px -2px rgba(0,0,0,0.06);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .field { margin-bottom: 0.875rem; }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--t1);
+            margin-bottom: 4px;
+        }
+
+        .field input, .field textarea, .field select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--t1);
+            background: var(--bg2);
+            outline: none;
+            transition: border-color 0.12s;
+        }
+
+        .field input:focus, .field textarea:focus, .field select:focus {
+            border-color: var(--c1);
+            box-shadow: 0 0 0 2px rgba(0,151,178,0.08);
+        }
+
+        .field textarea { min-height: 80px; resize: vertical; }
+
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
+
+        .check-row {
+            display: flex;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .check-row label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--t2);
+            cursor: pointer;
+        }
+
+        .check-row input { width: 16px; height: 16px; accent-color: var(--c1); }
+
+        .btn {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.12s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary { background: var(--c1); color: #fff; }
+        .btn-primary:hover { background: var(--c1h); }
+        .btn-danger { background: var(--red); color: #fff; }
+        .btn-danger:hover { background: #C53030; }
+        .btn-ghost { background: var(--bg); color: var(--t2); border: 1px solid var(--line); }
+        .btn-ghost:hover { border-color: var(--c1); color: var(--c1); }
+        .btn-sm { font-size: 13px; padding: 6px 12px; }
+
+        .btn-row { display: flex; gap: 0.5rem; margin-top: 1rem; }
+
+        /* Event list in admin */
+        .ev-admin {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            background: var(--w);
+        }
+
+        .ev-admin-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .ev-admin-date {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--c1);
+            min-width: 80px;
+        }
+
+        .ev-admin-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .ev-admin-city {
+            font-size: 13px;
+            color: var(--t3);
+            margin-left: 0.5rem;
+        }
+
+        .ev-admin-actions { display: flex; gap: 6px; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--dark);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .toast.on { opacity: 1; transform: none; }
+        .toast.success { background: var(--green); }
+        .toast.error { background: var(--red); }
+
+        /* Status bar */
+        .status-bar {
+            background: var(--w);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .status-text { font-size: 13px; color: var(--t2); }
+        .status-text strong { color: var(--t1); }
+
+        @media (max-width: 768px) {
+            .row, .row-3 { grid-template-columns: 1fr; }
+            .ev-admin { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+            .admin-content { padding: 0 1rem; margin: 1rem auto; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginScreen">
+    <div class="login-box">
+        <h1>Administrace</h1>
+        <p>Bite Marks — Kalendář akcí</p>
+        <div class="login-err" id="loginErr">Nesprávné heslo</div>
+        <div class="field">
+            <label>Heslo</label>
+            <input type="password" id="loginPw" placeholder="Zadejte heslo" autofocus>
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="doLogin()" style="width:100%;justify-content:center;">Přihlásit se</button>
+        </div>
+    </div>
+</div>
+
+<!-- ADMIN -->
+<div class="admin" id="adminScreen">
+
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <div class="admin-logo">Bite<span>Marks</span></div>
+            <div class="admin-badge">Admin</div>
+        </div>
+        <div class="admin-header-right">
+            <a href="index.html" class="btn btn-ghost btn-sm" style="color:#fff;border-color:rgba(255,255,255,0.2);">Zobrazit web</a>
+            <button class="btn btn-ghost btn-sm" style="color:#fff;border-color:rgba(255,255,255,0.2);" onclick="doLogout()">Odhlásit</button>
+        </div>
+    </div>
+
+    <div class="admin-tabs" id="tabs">
+        <button class="admin-tab on" data-tab="events">Akce</button>
+        <button class="admin-tab" data-tab="pricing">Ceník</button>
+        <button class="admin-tab" data-tab="hero">Texty</button>
+        <button class="admin-tab" data-tab="settings">Nastavení</button>
+    </div>
+
+    <div class="admin-content">
+
+        <!-- STATUS -->
+        <div class="status-bar" id="statusBar">
+            <div>
+                <span class="status-dot" id="statusDot"></span>
+                <span class="status-text" id="statusText">Načítání...</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="saveToGitHub()">Publikovat změny</button>
+        </div>
+
+        <!-- EVENTS PANEL -->
+        <div class="panel on" id="panel-events">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <h2 class="card-title" style="margin:0;">Správa akcí</h2>
+                <button class="btn btn-primary btn-sm" onclick="showEventForm()">+ Přidat akci</button>
+            </div>
+            <div id="eventsList"></div>
+
+            <!-- Event form (hidden by default) -->
+            <div class="card" id="eventForm" style="display:none;border:2px solid var(--c1);">
+                <h3 class="card-title" id="eventFormTitle">Nová akce</h3>
+                <input type="hidden" id="ev_id">
+                <div class="field">
+                    <label>Název akce</label>
+                    <input type="text" id="ev_name" placeholder="např. WebExpo 2026">
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <label>Organizátor</label>
+                        <input type="text" id="ev_org">
+                    </div>
+                    <div class="field">
+                        <label>Město</label>
+                        <input type="text" id="ev_city" placeholder="Praha">
+                    </div>
+                </div>
+                <div class="row-3">
+                    <div class="field">
+                        <label>Datum</label>
+                        <input type="date" id="ev_date">
+                    </div>
+                    <div class="field">
+                        <label>Čas</label>
+                        <input type="time" id="ev_time">
+                    </div>
+                    <div class="field">
+                        <label>Místo konání</label>
+                        <input type="text" id="ev_venue">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Popis</label>
+                    <textarea id="ev_desc" placeholder="O čem akce bude..."></textarea>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <label>Web akce</label>
+                        <input type="url" id="ev_web" placeholder="https://...">
+                    </div>
+                    <div class="field">
+                        <label>Registrace</label>
+                        <input type="url" id="ev_reg" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Témata (oddělená čárkou)</label>
+                    <input type="text" id="ev_topics" placeholder="AI, HR, Business">
+                </div>
+                <div class="field">
+                    <div class="check-row">
+                        <label><input type="checkbox" id="ev_isFree"> Vstup zdarma</label>
+                        <label><input type="checkbox" id="ev_isPrague"> Praha</label>
+                        <label><input type="checkbox" id="ev_seeksSpeakers"> Hledá speakery</label>
+                        <label><input type="checkbox" id="ev_seeksSponsors"> Hledá sponzory</label>
+                        <label><input type="checkbox" id="ev_premium"> Premium zápis</label>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="saveEvent()">Uložit akci</button>
+                    <button class="btn btn-ghost" onclick="hideEventForm()">Zrušit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRICING PANEL -->
+        <div class="panel" id="panel-pricing">
+            <div class="card">
+                <h3 class="card-title">Základní balíček</h3>
+                <div class="row">
+                    <div class="field">
+                        <label>Název</label>
+                        <input type="text" id="pr_basic_name">
+                    </div>
+                    <div class="field">
+                        <label>Cena (Kč)</label>
+                        <input type="number" id="pr_basic_price">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Popis</label>
+                    <input type="text" id="pr_basic_desc">
+                </div>
+                <div class="field">
+                    <label>Období</label>
+                    <input type="text" id="pr_basic_per">
+                </div>
+                <div class="field">
+                    <label>Funkce (každý řádek = jedna položka)</label>
+                    <textarea id="pr_basic_features" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="card-title">Premium balíček</h3>
+                <div class="row">
+                    <div class="field">
+                        <label>Název</label>
+                        <input type="text" id="pr_premium_name">
+                    </div>
+                    <div class="field">
+                        <label>Cena (Kč)</label>
+                        <input type="number" id="pr_premium_price">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Popis</label>
+                    <input type="text" id="pr_premium_desc">
+                </div>
+                <div class="field">
+                    <label>Období</label>
+                    <input type="text" id="pr_premium_per">
+                </div>
+                <div class="field">
+                    <label>Funkce (každý řádek = jedna položka)</label>
+                    <textarea id="pr_premium_features" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="savePricing()">Uložit ceník</button>
+            </div>
+        </div>
+
+        <!-- HERO PANEL -->
+        <div class="panel" id="panel-hero">
+            <div class="card">
+                <h3 class="card-title">Texty na hlavní stránce</h3>
+                <div class="field">
+                    <label>Nadpis (podporuje HTML: &lt;em&gt;, &lt;br&gt;)</label>
+                    <input type="text" id="hero_title">
+                </div>
+                <div class="field">
+                    <label>Popis pod nadpisem</label>
+                    <textarea id="hero_desc" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="saveHero()">Uložit texty</button>
+            </div>
+        </div>
+
+        <!-- SETTINGS PANEL -->
+        <div class="panel" id="panel-settings">
+            <div class="card">
+                <h3 class="card-title">Změna hesla</h3>
+                <div class="field">
+                    <label>Nové heslo</label>
+                    <input type="password" id="newPw" placeholder="Zadejte nové heslo">
+                </div>
+                <div class="field">
+                    <label>Potvrzení hesla</label>
+                    <input type="password" id="newPw2" placeholder="Zopakujte heslo">
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="changePassword()">Změnit heslo</button>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="card-title">GitHub propojení</h3>
+                <p style="font-size:13px;color:var(--t3);margin-bottom:1rem;">Pro publikování změn na web je potřeba GitHub Personal Access Token s oprávněním <strong>repo</strong>. Token se ukládá pouze ve vašem prohlížeči.</p>
+                <div class="field">
+                    <label>GitHub Token</label>
+                    <input type="password" id="ghToken" placeholder="ghp_...">
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <label>Repo vlastník</label>
+                        <input type="text" id="ghOwner" value="webhunter-navrhy">
+                    </div>
+                    <div class="field">
+                        <label>Repo název</label>
+                        <input type="text" id="ghRepo" value="bitemarks">
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="saveGitHub()">Uložit nastavení</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── AUTH ──
+const DEFAULT_PW = 'admin';
+
+function getPassword() {
+    return localStorage.getItem('bm_admin_pw') || DEFAULT_PW;
+}
+
+function doLogin() {
+    const pw = document.getElementById('loginPw').value;
+    if (pw === getPassword()) {
+        localStorage.setItem('bm_admin_logged', '1');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminScreen').classList.add('on');
+        loadAdminData();
+    } else {
+        document.getElementById('loginErr').style.display = 'block';
+    }
+}
+
+document.getElementById('loginPw').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+});
+
+function doLogout() {
+    localStorage.removeItem('bm_admin_logged');
+    location.reload();
+}
+
+// Auto-login if session
+if (localStorage.getItem('bm_admin_logged') === '1') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').classList.add('on');
+}
+
+function changePassword() {
+    const pw1 = document.getElementById('newPw').value;
+    const pw2 = document.getElementById('newPw2').value;
+    if (!pw1 || pw1.length < 3) return toast('Heslo musí mít alespoň 3 znaky', 'error');
+    if (pw1 !== pw2) return toast('Hesla se neshodují', 'error');
+    localStorage.setItem('bm_admin_pw', pw1);
+    document.getElementById('newPw').value = '';
+    document.getElementById('newPw2').value = '';
+    toast('Heslo změněno', 'success');
+}
+
+// ── TABS ──
+document.getElementById('tabs').addEventListener('click', e => {
+    const tab = e.target.closest('.admin-tab');
+    if (!tab) return;
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('on'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+    tab.classList.add('on');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('on');
+});
+
+// ── DATA ──
+let siteData = { hero: {}, pricing: { basic: {}, premium: {} }, events: [] };
+let dirty = false;
+
+async function loadAdminData() {
+    try {
+        const res = await fetch('data.json?t=' + Date.now());
+        siteData = await res.json();
+        populateAdmin();
+        setStatus('connected');
+    } catch (e) {
+        setStatus('error');
+        toast('Nepodařilo se načíst data', 'error');
+    }
+
+    // Load GitHub settings
+    const token = localStorage.getItem('bm_gh_token') || '';
+    const owner = localStorage.getItem('bm_gh_owner') || 'webhunter-navrhy';
+    const repo = localStorage.getItem('bm_gh_repo') || 'bitemarks';
+    document.getElementById('ghToken').value = token;
+    document.getElementById('ghOwner').value = owner;
+    document.getElementById('ghRepo').value = repo;
+}
+
+function populateAdmin() {
+    // Hero
+    document.getElementById('hero_title').value = siteData.hero.title || '';
+    document.getElementById('hero_desc').value = siteData.hero.description || '';
+
+    // Pricing
+    const b = siteData.pricing.basic;
+    const p = siteData.pricing.premium;
+    document.getElementById('pr_basic_name').value = b.name || '';
+    document.getElementById('pr_basic_price').value = b.price || '';
+    document.getElementById('pr_basic_desc').value = b.description || '';
+    document.getElementById('pr_basic_per').value = b.per || '';
+    document.getElementById('pr_basic_features').value = (b.features || []).join('\n');
+    document.getElementById('pr_premium_name').value = p.name || '';
+    document.getElementById('pr_premium_price').value = p.price || '';
+    document.getElementById('pr_premium_desc').value = p.description || '';
+    document.getElementById('pr_premium_per').value = p.per || '';
+    document.getElementById('pr_premium_features').value = (p.features || []).join('\n');
+
+    // Events
+    renderEventList();
+}
+
+function renderEventList() {
+    const list = document.getElementById('eventsList');
+    const sorted = siteData.events.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+    list.innerHTML = sorted.map(ev => {
+        const d = new Date(ev.date);
+        const dateStr = d.getDate() + '.' + (d.getMonth() + 1) + '.' + d.getFullYear();
+        return `<div class="ev-admin">
+            <div class="ev-admin-info">
+                <span class="ev-admin-date">${dateStr}</span>
+                <span class="ev-admin-name">${ev.name}</span>
+                <span class="ev-admin-city">${ev.city}</span>
+            </div>
+            <div class="ev-admin-actions">
+                <button class="btn btn-ghost btn-sm" onclick="editEvent(${ev.id})">Upravit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteEvent(${ev.id})">Smazat</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ── EVENT FORM ──
+function showEventForm(id) {
+    const form = document.getElementById('eventForm');
+    form.style.display = 'block';
+    document.getElementById('eventFormTitle').textContent = id ? 'Upravit akci' : 'Nová akce';
+    if (!id) clearEventForm();
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function hideEventForm() {
+    document.getElementById('eventForm').style.display = 'none';
+    clearEventForm();
+}
+
+function clearEventForm() {
+    ['ev_id','ev_name','ev_org','ev_city','ev_date','ev_time','ev_venue','ev_desc','ev_web','ev_reg','ev_topics'].forEach(id => {
+        document.getElementById(id).value = '';
+    });
+    ['ev_isFree','ev_isPrague','ev_seeksSpeakers','ev_seeksSponsors','ev_premium'].forEach(id => {
+        document.getElementById(id).checked = false;
+    });
+}
+
+function editEvent(id) {
+    const ev = siteData.events.find(e => e.id === id);
+    if (!ev) return;
+    document.getElementById('ev_id').value = ev.id;
+    document.getElementById('ev_name').value = ev.name;
+    document.getElementById('ev_org').value = ev.org;
+    document.getElementById('ev_city').value = ev.city;
+    document.getElementById('ev_date').value = ev.date;
+    document.getElementById('ev_time').value = ev.time || '';
+    document.getElementById('ev_venue').value = ev.venue || '';
+    document.getElementById('ev_desc').value = ev.desc;
+    document.getElementById('ev_web').value = ev.web || '';
+    document.getElementById('ev_reg').value = ev.reg || '';
+    document.getElementById('ev_topics').value = (ev.topics || []).join(', ');
+    document.getElementById('ev_isFree').checked = ev.isFree;
+    document.getElementById('ev_isPrague').checked = ev.isPrague;
+    document.getElementById('ev_seeksSpeakers').checked = ev.seeksSpeakers;
+    document.getElementById('ev_seeksSponsors').checked = ev.seeksSponsors;
+    document.getElementById('ev_premium').checked = ev.premium;
+    showEventForm(id);
+}
+
+function saveEvent() {
+    const name = document.getElementById('ev_name').value.trim();
+    const date = document.getElementById('ev_date').value;
+    if (!name || !date) return toast('Vyplňte název a datum', 'error');
+
+    const evData = {
+        name: name,
+        org: document.getElementById('ev_org').value.trim(),
+        date: date,
+        time: document.getElementById('ev_time').value,
+        city: document.getElementById('ev_city').value.trim(),
+        venue: document.getElementById('ev_venue').value.trim(),
+        desc: document.getElementById('ev_desc').value.trim(),
+        web: document.getElementById('ev_web').value.trim() || '#',
+        reg: document.getElementById('ev_reg').value.trim() || '#',
+        topics: document.getElementById('ev_topics').value.split(',').map(t => t.trim()).filter(Boolean),
+        isFree: document.getElementById('ev_isFree').checked,
+        isPrague: document.getElementById('ev_isPrague').checked,
+        seeksSpeakers: document.getElementById('ev_seeksSpeakers').checked,
+        seeksSponsors: document.getElementById('ev_seeksSponsors').checked,
+        premium: document.getElementById('ev_premium').checked
+    };
+
+    const existingId = document.getElementById('ev_id').value;
+    if (existingId) {
+        evData.id = parseInt(existingId);
+        const idx = siteData.events.findIndex(e => e.id === evData.id);
+        if (idx >= 0) siteData.events[idx] = evData;
+    } else {
+        evData.id = siteData.events.length > 0 ? Math.max(...siteData.events.map(e => e.id)) + 1 : 1;
+        siteData.events.push(evData);
+    }
+
+    dirty = true;
+    setStatus('dirty');
+    renderEventList();
+    hideEventForm();
+    toast(existingId ? 'Akce upravena' : 'Akce přidána', 'success');
+}
+
+function deleteEvent(id) {
+    if (!confirm('Opravdu smazat tuto akci?')) return;
+    siteData.events = siteData.events.filter(e => e.id !== id);
+    dirty = true;
+    setStatus('dirty');
+    renderEventList();
+    toast('Akce smazána', 'success');
+}
+
+// ── PRICING ──
+function savePricing() {
+    siteData.pricing.basic = {
+        name: document.getElementById('pr_basic_name').value,
+        description: document.getElementById('pr_basic_desc').value,
+        price: parseInt(document.getElementById('pr_basic_price').value) || 0,
+        per: document.getElementById('pr_basic_per').value,
+        features: document.getElementById('pr_basic_features').value.split('\n').filter(Boolean)
+    };
+    siteData.pricing.premium = {
+        name: document.getElementById('pr_premium_name').value,
+        description: document.getElementById('pr_premium_desc').value,
+        price: parseInt(document.getElementById('pr_premium_price').value) || 0,
+        per: document.getElementById('pr_premium_per').value,
+        features: document.getElementById('pr_premium_features').value.split('\n').filter(Boolean)
+    };
+    dirty = true;
+    setStatus('dirty');
+    toast('Ceník uložen lokálně. Klikněte "Publikovat změny" pro nasazení.', 'success');
+}
+
+// ── HERO ──
+function saveHero() {
+    siteData.hero.title = document.getElementById('hero_title').value;
+    siteData.hero.description = document.getElementById('hero_desc').value;
+    dirty = true;
+    setStatus('dirty');
+    toast('Texty uloženy lokálně. Klikněte "Publikovat změny" pro nasazení.', 'success');
+}
+
+// ── GITHUB ──
+function saveGitHub() {
+    localStorage.setItem('bm_gh_token', document.getElementById('ghToken').value);
+    localStorage.setItem('bm_gh_owner', document.getElementById('ghOwner').value);
+    localStorage.setItem('bm_gh_repo', document.getElementById('ghRepo').value);
+    toast('GitHub nastavení uloženo', 'success');
+}
+
+async function saveToGitHub() {
+    const token = localStorage.getItem('bm_gh_token');
+    const owner = localStorage.getItem('bm_gh_owner') || 'webhunter-navrhy';
+    const repo = localStorage.getItem('bm_gh_repo') || 'bitemarks';
+
+    if (!token) {
+        toast('Nejdřív nastavte GitHub Token v záložce Nastavení', 'error');
+        // Switch to settings tab
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('on'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+        document.querySelector('[data-tab="settings"]').classList.add('on');
+        document.getElementById('panel-settings').classList.add('on');
+        return;
+    }
+
+    try {
+        // Get current file SHA
+        const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data.json`, {
+            headers: { 'Authorization': 'token ' + token }
+        });
+        const fileInfo = await getRes.json();
+        const sha = fileInfo.sha;
+
+        // Push updated file
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(siteData, null, 2))));
+        const putRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data.json`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token ' + token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: 'Aktualizace dat z administrace',
+                content: content,
+                sha: sha
+            })
+        });
+
+        if (putRes.ok) {
+            dirty = false;
+            setStatus('connected');
+            toast('Změny publikovány. Web se aktualizuje za pár minut.', 'success');
+        } else {
+            const err = await putRes.json();
+            toast('Chyba: ' + (err.message || 'Nepodařilo se uložit'), 'error');
+        }
+    } catch (e) {
+        toast('Chyba při komunikaci s GitHubem: ' + e.message, 'error');
+    }
+}
+
+// ── UI HELPERS ──
+function setStatus(state) {
+    const dot = document.getElementById('statusDot');
+    const text = document.getElementById('statusText');
+    if (state === 'connected') {
+        dot.style.background = 'var(--green)';
+        text.innerHTML = '<strong>Připojeno</strong> — data načtena z data.json';
+    } else if (state === 'dirty') {
+        dot.style.background = '#F6AD55';
+        text.innerHTML = '<strong>Neuložené změny</strong> — klikněte "Publikovat změny"';
+    } else if (state === 'error') {
+        dot.style.background = 'var(--red)';
+        text.innerHTML = '<strong>Chyba</strong> — nepodařilo se načíst data';
+    }
+}
+
+function toast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast on ' + (type || '');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.className = 'toast'; }, 3500);
+}
+
+// Init
+if (localStorage.getItem('bm_admin_logged') === '1') {
+    loadAdminData();
+}
+</script>
+</body>
+</html>

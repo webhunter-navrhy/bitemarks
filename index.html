@@ -1356,6 +1356,7 @@
                 <li><a href="mailto:valerie.cizkova@bitemarks.cz">valerie.cizkova@bitemarks.cz</a></li>
                 <li><a href="tel:+420773515703">+420 773 515 703</a></li>
                 <li><a href="#">Podmínky</a></li>
+                <li><a href="admin.html">Administrace</a></li>
             </ul>
             <div class="footer-copy">2026 Bite Marks s.r.o. · Příční 1892/4, Praha · IČO: 23672161</div>
         </div>
@@ -1383,11 +1384,63 @@
 </div>
 
 <script>
-const DATA = [
-    {id:1, name:'Manažer roku 2025 — galavečer', org:'Česká manažerská asociace', date:'2026-10-06', time:'18:00', city:'Brno', venue:'Rotunda, Výstaviště Brno', isPrague:false, isFree:false, seeksSpeakers:false, seeksSponsors:true, desc:'Slavnostní vyhlášení výsledků 33. ročníku prestižního ocenění Manažer roku. Do závěrečné fáze postoupilo 25 výjimečných manažerek a manažerů z významných českých firem. Galavečer se koná v rámci Mezinárodního strojírenského veletrhu. Generálním partnerem je ŠKODA Group.', topics:['Management','Business','Leadership','Networking'], web:'https://www.bitemarks.cz/prestizni-oceneni-manazer-roku-ma-25-finalistu-do-zaverecne-faze-33-rocniku-postoupily-vyjimecne-osobnosti-ceskeho-managementu/', reg:'#', premium:true},
-    {id:2, name:'Konference HR, Finance & AI', org:'Bite Marks Media', date:'2026-10-22', time:'08:30', city:'Brno', venue:'Hotel Passage', isPrague:false, isFree:false, seeksSpeakers:true, seeksSponsors:true, desc:'Odborná konference propojující svět HR, mezd a financí. Program zahrnuje strategické přednášky, panelové diskuse, případové studie i praktické workshopy. Vystoupí Martina Lukáčová (CEO AS Industry), Michal Černý (KISK FF MU) a další. Zvýhodněná registrace s cenou téměř o 15 % nižší otevřena do 15. září 2026.', topics:['HR','AI','Finance','Mzdy','Digitalizace'], web:'https://www.bitemarks.cz/hr-finance-a-mzdy-spojuje-umela-inteligence-odborna-konference-ukaze-jak-promenit-ai-v-realnou-konkurencni-vyhodu/', reg:'#', premium:true},
-    {id:3, name:'ASD Fest 2026', org:'Bite Marks Media & partneři', date:'2026-10-27', time:'09:00', city:'Brno', venue:'Výstaviště Brno, pavilon G1', isPrague:false, isFree:true, seeksSpeakers:true, seeksSponsors:true, desc:'První ročník veletrhu českého aerospace, defence, space & security ekosystému. Reálné ukázky techniky a technologií, odborné panelové diskuze, praktické workshopy. Program na Main Stage a ve Future Lounge pokryje budoucnost vzdušného prostoru, kyberbezpečnost, AI, vesmírné projekty i kariérní cesty v sektoru.', topics:['Aerospace','Defence','Technologie','Kariéra','Kyberbezpečnost'], web:'https://www.bitemarks.cz/aerospace-defence-veletrh-27-10-vystaviste-brno/', reg:'#', premium:true}
-];
+let DATA = [];
+let SITE_DATA = {};
+
+async function loadData() {
+    try {
+        const res = await fetch('data.json?t=' + Date.now());
+        SITE_DATA = await res.json();
+        DATA = SITE_DATA.events || [];
+
+        // Update hero
+        if (SITE_DATA.hero) {
+            const h1 = document.querySelector('.hero h1');
+            const desc = document.querySelector('.hero-desc');
+            if (h1) h1.innerHTML = SITE_DATA.hero.title;
+            if (desc) desc.textContent = SITE_DATA.hero.description;
+        }
+
+        // Update featured sidebar
+        if (DATA.length > 0) {
+            const nearest = DATA.slice().sort((a,b) => new Date(a.date) - new Date(b.date))[0];
+            document.querySelector('.hero-featured-name').textContent = nearest.name;
+            document.querySelector('.hero-featured-meta').innerHTML =
+                '<strong>' + formatDateFull(nearest.date) + '</strong><br>' +
+                nearest.venue + ', ' + nearest.city;
+            document.querySelector('.hero-stat-num').textContent = DATA.length;
+            const cities = new Set(DATA.map(e => e.city));
+            document.querySelectorAll('.hero-stat-num')[1].textContent = cities.size;
+            document.querySelectorAll('.hero-stat-label')[1].textContent = cities.size === 1 ? 'město' : 'měst';
+        }
+
+        // Update pricing
+        if (SITE_DATA.pricing) {
+            const b = SITE_DATA.pricing.basic;
+            const p = SITE_DATA.pricing.premium;
+            const cards = document.querySelectorAll('.price-card');
+            if (cards[0] && b) {
+                cards[0].querySelector('.price-name').textContent = b.name;
+                cards[0].querySelector('.price-desc').textContent = b.description;
+                cards[0].querySelector('.price-amount').innerHTML = b.price.toLocaleString('cs') + ' <small>Kč</small>';
+                cards[0].querySelector('.price-per').textContent = b.per;
+                cards[0].querySelector('.price-list').innerHTML = b.features.map(f => '<li>' + f + '</li>').join('');
+            }
+            if (cards[1] && p) {
+                cards[1].querySelector('.price-name').textContent = p.name;
+                cards[1].querySelector('.price-desc').textContent = p.description;
+                cards[1].querySelector('.price-amount').innerHTML = p.price.toLocaleString('cs') + ' <small>Kč</small>';
+                cards[1].querySelector('.price-per').textContent = p.per;
+                cards[1].querySelector('.price-list').innerHTML = p.features.map(f => '<li>' + f + '</li>').join('');
+            }
+        }
+
+        buildMonthFilters();
+        render(DATA);
+    } catch (e) {
+        console.error('Failed to load data:', e);
+    }
+}
 
 const MONTHS_SHORT = ['Led','Úno','Bře','Dub','Kvě','Čvn','Čvc','Srp','Zář','Říj','Lis','Pro'];
 const MONTHS_FULL = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
@@ -1436,17 +1489,21 @@ function render(events) {
     document.getElementById('evCount').textContent = events.length + ' akcí';
 }
 
-// Build month filter buttons from data
 const MONTHS_NAMES = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
-const monthsInData = [...new Set(DATA.map(e => new Date(e.date).getMonth()))].sort((a, b) => a - b);
-const monthsBar = document.getElementById('monthsBar');
-monthsInData.forEach(m => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn';
-    btn.dataset.m = String(m);
-    btn.textContent = MONTHS_NAMES[m];
-    monthsBar.appendChild(btn);
-});
+
+function buildMonthFilters() {
+    const monthsInData = [...new Set(DATA.map(e => new Date(e.date).getMonth()))].sort((a, b) => a - b);
+    const bar = document.getElementById('monthsBar');
+    // Remove old month buttons (keep "Všechny měsíce")
+    bar.querySelectorAll('[data-m]:not([data-m="all"])').forEach(b => b.remove());
+    monthsInData.forEach(m => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.dataset.m = String(m);
+        btn.textContent = MONTHS_NAMES[m];
+        bar.appendChild(btn);
+    });
+}
 
 // Filters
 let activeFilter = 'all';
@@ -1576,8 +1633,8 @@ function handleSubmit(e) {
     setTimeout(() => { btn.innerHTML = original; btn.style.background = ''; btn.disabled = false; }, 3000);
 }
 
-// Initial render
-render(DATA);
+// Load data and render
+loadData();
 </script>
 </body>
 </html>
