@@ -1767,20 +1767,22 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 const dropzone = document.getElementById('dz');
 const fileInput = document.getElementById('fileInput');
 
-dropzone.addEventListener('click', () => fileInput.click());
-dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.style.borderColor = 'var(--c1)'; });
-dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = ''; });
-dropzone.addEventListener('drop', e => {
-    e.preventDefault();
-    dropzone.style.borderColor = '';
-    if (e.dataTransfer.files.length) {
-        fileInput.files = e.dataTransfer.files;
-        dropzone.querySelector('p').innerHTML = '<strong>' + e.dataTransfer.files[0].name + '</strong>';
-    }
-});
-fileInput.addEventListener('change', () => {
-    if (fileInput.files.length) dropzone.querySelector('p').innerHTML = '<strong>' + fileInput.files[0].name + '</strong>';
-});
+if (dropzone && fileInput) {
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.style.borderColor = 'var(--c1)'; });
+    dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = ''; });
+    dropzone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropzone.style.borderColor = '';
+        if (e.dataTransfer.files.length) {
+            fileInput.files = e.dataTransfer.files;
+            dropzone.querySelector('p').innerHTML = '<strong>' + e.dataTransfer.files[0].name + '</strong>';
+        }
+    });
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) dropzone.querySelector('p').innerHTML = '<strong>' + fileInput.files[0].name + '</strong>';
+    });
+}
 
 // Form sent confirmation
 if (new URLSearchParams(window.location.search).has('sent')) {
