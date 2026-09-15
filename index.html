@@ -1568,14 +1568,16 @@ async function loadData() {
         // Update featured sidebar
         if (DATA.length > 0) {
             const nearest = DATA.slice().sort((a,b) => new Date(a.date) - new Date(b.date))[0];
-            document.querySelector('.hero-featured-name').textContent = nearest.name;
-            document.querySelector('.hero-featured-meta').innerHTML =
-                '<strong>' + formatDateFull(nearest.date) + '</strong><br>' +
-                nearest.venue + ', ' + nearest.city;
-            document.querySelector('.hero-stat-num').textContent = DATA.length;
-            const cities = new Set(DATA.map(e => e.city));
-            document.querySelectorAll('.hero-stat-num')[1].textContent = cities.size;
-            document.querySelectorAll('.hero-stat-label')[1].textContent = cities.size === 1 ? 'město' : 'měst';
+            const fn = document.querySelector('.hero-featured-name');
+            const fm = document.querySelector('.hero-featured-meta');
+            const sn = document.querySelector('.hero-stat-num');
+            const sns = document.querySelectorAll('.hero-stat-num');
+            const sls = document.querySelectorAll('.hero-stat-label');
+            if (fn) fn.textContent = nearest.name;
+            if (fm) fm.innerHTML = '<strong>' + formatDateFull(nearest.date) + '</strong><br>' + nearest.venue + ', ' + nearest.city;
+            if (sn) sn.textContent = DATA.length;
+            if (sns[1]) sns[1].textContent = new Set(DATA.map(e => e.city)).size;
+            if (sls[1]) sls[1].textContent = new Set(DATA.map(e => e.city)).size === 1 ? 'město' : 'měst';
         }
 
         // Update pricing
@@ -1604,6 +1606,7 @@ async function loadData() {
         initCalendar();
     } catch (e) {
         console.error('Failed to load data:', e);
+        document.getElementById('evContainer').innerHTML = '<p style="color:red;padding:1rem;">Chyba: ' + e.message + '</p>';
     }
 }
 
@@ -1916,6 +1919,9 @@ function renderCalendar() {
 
     grid.innerHTML = html;
 }
+
+// Init calendar grid immediately (events get added after data loads)
+initCalendar();
 
 // Load data and render
 loadData();
