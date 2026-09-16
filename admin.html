@@ -439,6 +439,10 @@
                     <input type="text" id="ev_topics" placeholder="AI, HR, Business">
                 </div>
                 <div class="field">
+                    <label>Úvodní fotka (URL obrázku)</label>
+                    <input type="url" id="ev_image" placeholder="https://...odkaz na obrázek">
+                </div>
+                <div class="field">
                     <div class="check-row">
                         <label><input type="checkbox" id="ev_isFree"> Vstup zdarma</label>
                         <label><input type="checkbox" id="ev_isPrague"> Praha</label>
@@ -711,7 +715,7 @@ function hideEventForm() {
 }
 
 function clearEventForm() {
-    ['ev_id','ev_name','ev_org','ev_city','ev_date','ev_time','ev_venue','ev_desc','ev_web','ev_reg','ev_topics'].forEach(id => {
+    ['ev_id','ev_name','ev_org','ev_city','ev_date','ev_time','ev_venue','ev_desc','ev_web','ev_reg','ev_topics','ev_image'].forEach(id => {
         document.getElementById(id).value = '';
     });
     ['ev_isFree','ev_isPrague','ev_seeksSpeakers','ev_seeksSponsors','ev_premium'].forEach(id => {
@@ -733,6 +737,7 @@ function editEvent(id) {
     document.getElementById('ev_web').value = ev.web || '';
     document.getElementById('ev_reg').value = ev.reg || '';
     document.getElementById('ev_topics').value = (ev.topics || []).join(', ');
+    document.getElementById('ev_image').value = ev.image || '';
     document.getElementById('ev_isFree').checked = ev.isFree;
     document.getElementById('ev_isPrague').checked = ev.isPrague;
     document.getElementById('ev_seeksSpeakers').checked = ev.seeksSpeakers;
@@ -757,6 +762,7 @@ function saveEvent() {
         web: document.getElementById('ev_web').value.trim() || '#',
         reg: document.getElementById('ev_reg').value.trim() || '#',
         topics: document.getElementById('ev_topics').value.split(',').map(t => t.trim()).filter(Boolean),
+        image: document.getElementById('ev_image').value.trim(),
         isFree: document.getElementById('ev_isFree').checked,
         isPrague: document.getElementById('ev_isPrague').checked,
         seeksSpeakers: document.getElementById('ev_seeksSpeakers').checked,

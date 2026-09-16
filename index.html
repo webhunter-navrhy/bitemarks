@@ -1107,6 +1107,13 @@
             height: 100px;
             background: linear-gradient(135deg, rgba(0,151,178,0.06) 0%, var(--bg) 100%);
             border-bottom: 2px solid var(--c1);
+            background-size: cover;
+            background-position: center;
+            transition: height 0.25s;
+        }
+
+        .modal-header.has-image {
+            height: 240px;
         }
 
         .modal-body { padding: 2rem; }
@@ -1419,6 +1426,10 @@
                                 <label class="fl">Název akce <span class="req">*</span></label>
                                 <input type="text" name="nazev_akce" class="fi" placeholder="např. WebExpo 2026" required>
                             </div>
+                            <div class="fg">
+                                <label class="fl">Pořadatel <span class="req">*</span></label>
+                                <input type="text" name="poradatel" class="fi" placeholder="např. Firma s.r.o." required>
+                            </div>
                             <div class="f-row">
                                 <div class="fg"><label class="fl">Datum <span class="req">*</span></label><input type="date" name="datum" class="fi" required></div>
                                 <div class="fg"><label class="fl">Čas zahájení</label><input type="time" name="cas" class="fi"></div>
@@ -1726,6 +1737,16 @@ function openModal(id) {
         : '<span class="tag tag-am">Placený vstup</span>';
     if (ev.seeksSpeakers) tags += '<span class="tag tag-bl">Hledá speakery</span>';
     if (ev.seeksSponsors) tags += '<span class="tag tag-vi">Hledá sponzory</span>';
+
+    const header = document.querySelector('.modal-header');
+    if (ev.image) {
+        header.style.backgroundImage = 'url(' + ev.image + ')';
+        header.classList.add('has-image');
+    } else {
+        header.style.backgroundImage = '';
+        header.style.background = '';
+        header.classList.remove('has-image');
+    }
 
     document.getElementById('mTags').innerHTML = tags;
     document.getElementById('mName').textContent = ev.name;
