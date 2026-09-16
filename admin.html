@@ -238,6 +238,28 @@
 
         .btn-row { display: flex; gap: 0.5rem; margin-top: 1rem; }
 
+        .img-drop {
+            border: 2px dashed var(--line);
+            border-radius: 6px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s;
+            font-size: 14px;
+            color: var(--t3);
+        }
+        .img-drop:hover, .img-drop.dragover { border-color: var(--c1); color: var(--c1); }
+
+        .img-preview img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--line);
+            display: block;
+        }
+        .img-preview { margin-bottom: 6px; }
+
         /* Event list in admin */
         .ev-admin {
             display: flex;
@@ -439,8 +461,16 @@
                     <input type="text" id="ev_topics" placeholder="AI, HR, Business">
                 </div>
                 <div class="field">
-                    <label>Úvodní fotka (URL obrázku)</label>
-                    <input type="url" id="ev_image" placeholder="https://...odkaz na obrázek">
+                    <label>Úvodní fotka</label>
+                    <input type="file" id="ev_image_file" accept="image/*" style="display:none">
+                    <input type="hidden" id="ev_image" value="">
+                    <div id="ev_image_preview" class="img-preview" style="display:none">
+                        <img id="ev_image_preview_img" alt="Náhled">
+                        <button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px;" onclick="removeEventImage()">Odebrat fotku</button>
+                    </div>
+                    <div id="ev_image_upload_btn" class="img-drop" onclick="document.getElementById('ev_image_file').click()">
+                        + Nahrát obrázek z počítače
+                    </div>
                 </div>
                 <div class="field">
                     <div class="check-row">
@@ -636,6 +666,59 @@ document.getElementById('tabs').addEventListener('click', e => {
 // ── DATA ──
 let siteData = { hero: {}, pricing: { basic: {}, premium: {} }, events: [] };
 let dirty = false;
+let currentFormImage = null; // { base64, filename, preview }
+
+// ── IMAGE UPLOAD ──
+document.getElementById('ev_image_file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        const base64Full = ev.target.result;
+        const base64Data = base64Full.split(',')[1];
+        const ext = file.name.split('.').pop().toLowerCase();
+        const safeExt = ['jpg','jpeg','png','webp','gif'].includes(ext) ? ext : 'jpg';
+        currentFormImage = {
+            base64: base64Data,
+            filename: 'images/ev-' + Date.now() + '.' + safeExt,
+            preview: base64Full
+        };
+        showImagePreview(base64Full);
+    };
+    reader.readAsDataURL(file);
+});
+
+(function() {
+    const drop = document.getElementById('ev_image_upload_btn');
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+    drop.addEventListener('drop', e => {
+        e.preventDefault();
+        drop.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            document.getElementById('ev_image_file').files = e.dataTransfer.files;
+            document.getElementById('ev_image_file').dispatchEvent(new Event('change'));
+        }
+    });
+})();
+
+function showImagePreview(src) {
+    document.getElementById('ev_image_preview_img').src = src;
+    document.getElementById('ev_image_preview').style.display = 'block';
+    document.getElementById('ev_image_upload_btn').style.display = 'none';
+}
+
+function hideImagePreview() {
+    document.getElementById('ev_image_preview').style.display = 'none';
+    document.getElementById('ev_image_upload_btn').style.display = '';
+    document.getElementById('ev_image_file').value = '';
+}
+
+function removeEventImage() {
+    currentFormImage = null;
+    document.getElementById('ev_image').value = '';
+    hideImagePreview();
+}
 
 async function loadAdminData() {
     try {
@@ -721,6 +804,8 @@ function clearEventForm() {
     ['ev_isFree','ev_isPrague','ev_seeksSpeakers','ev_seeksSponsors','ev_premium'].forEach(id => {
         document.getElementById(id).checked = false;
     });
+    currentFormImage = null;
+    hideImagePreview();
 }
 
 function editEvent(id) {
@@ -738,6 +823,12 @@ function editEvent(id) {
     document.getElementById('ev_reg').value = ev.reg || '';
     document.getElementById('ev_topics').value = (ev.topics || []).join(', ');
     document.getElementById('ev_image').value = ev.image || '';
+    currentFormImage = null;
+    if (ev.image) {
+        showImagePreview(ev.image);
+    } else {
+        hideImagePreview();
+    }
     document.getElementById('ev_isFree').checked = ev.isFree;
     document.getElementById('ev_isPrague').checked = ev.isPrague;
     document.getElementById('ev_seeksSpeakers').checked = ev.seeksSpeakers;
@@ -762,7 +853,8 @@ function saveEvent() {
         web: document.getElementById('ev_web').value.trim() || '#',
         reg: document.getElementById('ev_reg').value.trim() || '#',
         topics: document.getElementById('ev_topics').value.split(',').map(t => t.trim()).filter(Boolean),
-        image: document.getElementById('ev_image').value.trim(),
+        image: currentFormImage ? currentFormImage.filename : (document.getElementById('ev_image').value.trim() || ''),
+        _pendingImage: currentFormImage ? currentFormImage.base64 : null,
         isFree: document.getElementById('ev_isFree').checked,
         isPrague: document.getElementById('ev_isPrague').checked,
         seeksSpeakers: document.getElementById('ev_seeksSpeakers').checked,
@@ -850,6 +942,32 @@ async function saveToGitHub() {
     }
 
     try {
+        // Upload pending images first
+        for (const ev of siteData.events) {
+            if (!ev._pendingImage) continue;
+            const imgRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${ev.image}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'token ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: 'Fotka: ' + ev.name,
+                    content: ev._pendingImage
+                })
+            });
+            if (!imgRes.ok) {
+                const err = await imgRes.json();
+                toast('Chyba při nahrávání fotky pro ' + ev.name + ': ' + (err.message || ''), 'error');
+                return;
+            }
+            delete ev._pendingImage;
+        }
+
+        // Clean _pendingImage from data before saving
+        const cleanData = JSON.parse(JSON.stringify(siteData));
+        cleanData.events.forEach(ev => delete ev._pendingImage);
+
         // Get current file SHA
         const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data.json`, {
             headers: { 'Authorization': 'token ' + token }
@@ -858,7 +976,7 @@ async function saveToGitHub() {
         const sha = fileInfo.sha;
 
         // Push updated file
-        const content = btoa(unescape(encodeURIComponent(JSON.stringify(siteData, null, 2))));
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(cleanData, null, 2))));
         const putRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data.json`, {
             method: 'PUT',
             headers: {
