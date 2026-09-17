@@ -1421,7 +1421,7 @@
                 <p class="section-subtitle reveal">Po odeslání se s vámi ozveme do 24 hodin. Platba probíhá až po schválení.</p>
                 <div class="reveal">
                     <div class="form-card">
-                        <form id="eForm" action="https://api.web3forms.com/submit" method="POST">
+                        <form id="eForm" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
                             <div class="fg">
                                 <label class="fl">Název akce <span class="req">*</span></label>
                                 <input type="text" name="nazev_akce" class="fi" placeholder="např. WebExpo 2026" required>
@@ -1470,6 +1470,11 @@
                             <div class="f-row">
                                 <div class="fg"><label class="fl">Email <span class="req">*</span></label><input type="email" name="email" class="fi" placeholder="vas@email.cz" required></div>
                                 <div class="fg"><label class="fl">Jméno</label><input type="text" name="jmeno" class="fi" placeholder="Jan Novák"></div>
+                            </div>
+                            <div class="fg">
+                                <label class="fl">Podklady (fotky, PDF, logo...)</label>
+                                <input type="file" name="attachment" class="fi" multiple accept="image/*,.pdf,.doc,.docx,.zip" style="padding:8px;">
+                                <p style="font-size:12px;color:var(--t4);margin-top:4px;">Max 10 MB celkem. Můžete vybrat více souborů najednou.</p>
                             </div>
                             <div class="fg">
                                 <label class="fl">Balíček <span class="req">*</span></label>
@@ -1609,6 +1614,43 @@ async function loadData() {
                 cards[1].querySelector('.price-amount').innerHTML = p.price.toLocaleString('cs') + ' <small>Kč</small>';
                 cards[1].querySelector('.price-per').textContent = p.per;
                 cards[1].querySelector('.price-list').innerHTML = p.features.map(f => '<li>' + f + '</li>').join('');
+            }
+        }
+
+        // Update form pricing radio buttons
+        if (SITE_DATA.pricing) {
+            const b = SITE_DATA.pricing.basic;
+            const p = SITE_DATA.pricing.premium;
+            const radios = document.querySelectorAll('input[name="balicek"]');
+            if (radios[0] && b) {
+                const label = b.name + ', ' + b.price.toLocaleString('cs') + ' Kč';
+                radios[0].value = label;
+                radios[0].nextElementSibling.textContent = label;
+            }
+            if (radios[1] && p) {
+                const label = p.name + ', ' + p.price.toLocaleString('cs') + ' Kč';
+                radios[1].value = label;
+                radios[1].nextElementSibling.textContent = label;
+            }
+        }
+
+        // Update sidebar info card
+        if (SITE_DATA.sidebar) {
+            const sb = SITE_DATA.sidebar;
+            const card = document.querySelector('.form-info-card');
+            if (card) {
+                const title = card.querySelector('.form-info-title');
+                const desc = card.querySelector('.form-info-text');
+                if (title) title.textContent = sb.title;
+                if (desc) desc.textContent = sb.description;
+                const blocks = card.querySelectorAll('.info-block');
+                blocks.forEach(b => b.remove());
+                (sb.blocks || []).forEach(block => {
+                    const div = document.createElement('div');
+                    div.className = 'info-block';
+                    div.innerHTML = '<h4>' + block.heading + '</h4><ul>' + block.items.map(i => '<li>' + i + '</li>').join('') + '</ul>';
+                    card.appendChild(div);
+                });
             }
         }
 

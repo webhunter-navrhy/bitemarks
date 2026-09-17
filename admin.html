@@ -558,6 +558,33 @@
                     <textarea id="hero_desc" rows="3"></textarea>
                 </div>
             </div>
+            <div class="card" style="margin-top:1rem;">
+                <h3 class="card-title">Sidebar u formuláře — „Proč přidat akci u nás"</h3>
+                <div class="field">
+                    <label>Nadpis</label>
+                    <input type="text" id="sb_title">
+                </div>
+                <div class="field">
+                    <label>Popis</label>
+                    <textarea id="sb_desc" rows="2"></textarea>
+                </div>
+                <div class="field">
+                    <label>Blok 1 — nadpis</label>
+                    <input type="text" id="sb_b1_heading">
+                </div>
+                <div class="field">
+                    <label>Blok 1 — položky (každý řádek = jedna položka)</label>
+                    <textarea id="sb_b1_items" rows="3"></textarea>
+                </div>
+                <div class="field">
+                    <label>Blok 2 — nadpis</label>
+                    <input type="text" id="sb_b2_heading">
+                </div>
+                <div class="field">
+                    <label>Blok 2 — položky (každý řádek = jedna položka)</label>
+                    <textarea id="sb_b2_items" rows="4"></textarea>
+                </div>
+            </div>
             <div class="btn-row">
                 <button class="btn btn-primary" onclick="saveHero()">Uložit texty</button>
             </div>
@@ -745,6 +772,21 @@ function populateAdmin() {
     document.getElementById('hero_title').value = siteData.hero.title || '';
     document.getElementById('hero_desc').value = siteData.hero.description || '';
 
+    // Sidebar
+    if (siteData.sidebar) {
+        const sb = siteData.sidebar;
+        document.getElementById('sb_title').value = sb.title || '';
+        document.getElementById('sb_desc').value = sb.description || '';
+        if (sb.blocks && sb.blocks[0]) {
+            document.getElementById('sb_b1_heading').value = sb.blocks[0].heading || '';
+            document.getElementById('sb_b1_items').value = (sb.blocks[0].items || []).join('\n');
+        }
+        if (sb.blocks && sb.blocks[1]) {
+            document.getElementById('sb_b2_heading').value = sb.blocks[1].heading || '';
+            document.getElementById('sb_b2_items').value = (sb.blocks[1].items || []).join('\n');
+        }
+    }
+
     // Pricing
     const b = siteData.pricing.basic;
     const p = siteData.pricing.premium;
@@ -913,6 +955,22 @@ function savePricing() {
 function saveHero() {
     siteData.hero.title = document.getElementById('hero_title').value;
     siteData.hero.description = document.getElementById('hero_desc').value;
+
+    siteData.sidebar = {
+        title: document.getElementById('sb_title').value,
+        description: document.getElementById('sb_desc').value,
+        blocks: [
+            {
+                heading: document.getElementById('sb_b1_heading').value,
+                items: document.getElementById('sb_b1_items').value.split('\n').filter(Boolean)
+            },
+            {
+                heading: document.getElementById('sb_b2_heading').value,
+                items: document.getElementById('sb_b2_items').value.split('\n').filter(Boolean)
+            }
+        ]
+    };
+
     dirty = true;
     setStatus('dirty');
     toast('Texty uloženy lokálně. Klikněte "Publikovat změny" pro nasazení.', 'success');
