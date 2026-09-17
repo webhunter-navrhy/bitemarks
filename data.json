@@ -7,7 +7,7 @@
     "basic": {
       "name": "Základní",
       "description": "Pro meetupy a komunitní akce",
-      "price": 990,
+      "price": 490,
       "per": "jednorázově za akci",
       "features": [
         "Zápis do kalendáře",
@@ -19,7 +19,7 @@
     "premium": {
       "name": "Premium",
       "description": "Pro konference a velké eventy",
-      "price": 2490,
+      "price": 990,
       "per": "jednorázově za akci",
       "features": [
         "Vše ze Základního",
@@ -44,8 +44,12 @@
       "seeksSpeakers": false,
       "seeksSponsors": true,
       "desc": "Slavnostní vyhlášení výsledků 33. ročníku prestižního ocenění Manažer roku. Do závěrečné fáze postoupilo 25 výjimečných manažerek a manažerů z významných českých firem. Galavečer se koná v rámci Mezinárodního strojírenského veletrhu. Generálním partnerem je ŠKODA Group.",
-      "topics": ["Management", "Business", "Leadership", "Networking"],
-      "image": "",
+      "topics": [
+        "Management",
+        "Business",
+        "Leadership",
+        "Networking"
+      ],
       "web": "https://www.bitemarks.cz/prestizni-oceneni-manazer-roku-ma-25-finalistu-do-zaverecne-faze-33-rocniku-postoupily-vyjimecne-osobnosti-ceskeho-managementu/",
       "reg": "#",
       "premium": true
@@ -63,8 +67,13 @@
       "seeksSpeakers": true,
       "seeksSponsors": true,
       "desc": "Odborná konference propojující svět HR, mezd a financí. Program zahrnuje strategické přednášky, panelové diskuse, případové studie i praktické workshopy. Vystoupí Martina Lukáčová (CEO AS Industry), Michal Černý (KISK FF MU) a další. Zvýhodněná registrace s cenou téměř o 15 % nižší otevřena do 15. září 2026.",
-      "topics": ["HR", "AI", "Finance", "Mzdy", "Digitalizace"],
-      "image": "",
+      "topics": [
+        "HR",
+        "AI",
+        "Finance",
+        "Mzdy",
+        "Digitalizace"
+      ],
       "web": "https://www.bitemarks.cz/hr-finance-a-mzdy-spojuje-umela-inteligence-odborna-konference-ukaze-jak-promenit-ai-v-realnou-konkurencni-vyhodu/",
       "reg": "#",
       "premium": true
@@ -82,8 +91,13 @@
       "seeksSpeakers": true,
       "seeksSponsors": true,
       "desc": "První ročník veletrhu českého aerospace, defence, space & security ekosystému. Reálné ukázky techniky a technologií, odborné panelové diskuze, praktické workshopy. Program na Main Stage a ve Future Lounge pokryje budoucnost vzdušného prostoru, kyberbezpečnost, AI, vesmírné projekty i kariérní cesty v sektoru.",
-      "topics": ["Aerospace", "Defence", "Technologie", "Kariéra", "Kyberbezpečnost"],
-      "image": "",
+      "topics": [
+        "Aerospace",
+        "Defence",
+        "Technologie",
+        "Kariéra",
+        "Kyberbezpečnost"
+      ],
       "web": "https://www.bitemarks.cz/aerospace-defence-veletrh-27-10-vystaviste-brno/",
       "reg": "#",
       "premium": true
