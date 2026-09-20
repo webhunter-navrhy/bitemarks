@@ -32,14 +32,15 @@
   },
   "sidebar": {
     "title": "Proč přidat akci u nás",
-    "description": "Bite Marks je magazín o kariéře, byznysu a zdraví. Naše publikum aktivně hledá příležitosti k rozvoji.",
+    "description": "Na stránkách Bite Marks nachází čtenáři inspiraci ze světa kariéry, employer brandingu, byznysu i lifestylu. ",
     "blocks": [
       {
         "heading": "Dosah",
         "items": [
-          "8 500+ návštěvníků měsíčně",
-          "5 000+ odběratelů newsletteru",
-          "Sdílení na sociálních sítích"
+          "Tisíce návštěvníků měsíčně",
+          "Stovky odběratelů newsletteru",
+          "Sdílení na sociálních sítích",
+          "Aktivní spolupráce s platformami"
         ]
       },
       {
@@ -48,7 +49,8 @@
           "Název, datum a místo konání",
           "Typ vstupného",
           "Popis a odkaz na registraci",
-          "Logo nebo banner (volitelné)"
+          "Logo nebo banner (volitelné)",
+          "Úvodní fotografii k akci"
         ]
       }
     ]
